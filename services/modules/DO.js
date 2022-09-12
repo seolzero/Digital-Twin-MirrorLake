@@ -7,6 +7,7 @@ class DO {
 			});
 		});
 	}
+
 	async checkNameExist(Name, key) {
 		let NameList = await getNameList(key).then((List) => {
 			return List;
@@ -21,6 +22,7 @@ class DO {
 			resolve(flag);
 		});
 	}
+
 	CheckKeyExistAndAddCount(DOWholeData) {
 		if (Object.keys(DOWholeData).some((v) => v == "sensor")) {
 			DOWholeData.sensorCount = DOWholeData.sensor.length;
