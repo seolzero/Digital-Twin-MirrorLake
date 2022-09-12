@@ -2,14 +2,34 @@ const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
-/*
+const service = require("../../../services");
+const ErrorHandler = require("../../../lib/error-handler");
+
+/**
  * DO Creation
+ * @body {String} name (required)
+ * @body {String Array} sensor (required)
+ * @returns {Json} {}
  */
 router.post("/", async function (req, res) {
-	let fullBody = "";
-	req.on("data", function (chunk) {
-		fullBody += chunk;
-	});
+	try {
+		const { name, sensor } = req.body;
+
+		const result = await service.do.create({ name, sensor });
+
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, "POST /DigitalTwin/DO");
+	}
+
+	// let fullBody = "";
+	// req.on("data", function (chunk) {
+	// 	fullBody += chunk;
+	// });
 
 	req.on("end", async function () {
 		if (tryJSONparse(fullBody)) {

@@ -1,4 +1,5 @@
 const Flink = require("./modules/flink");
+const Redis = require("./modules/redis");
 
 class Models {
 	#getInstance(_class) {
@@ -14,6 +15,10 @@ class Models {
 
 	get flink() {
 		return this.#getInstance(Flink);
+	}
+
+	get redis() {
+		return this.#getInstance(Redis);
 	}
 }
 

@@ -15,6 +15,10 @@ class Flink {
 		};
 	}
 
+	/**
+	 * DO 데이터를 이용해 kafka에 테이블 생성
+	 * @param {Json} DOobject
+	 */
 	createDOTable(DOobject) {
 		console.log("create DO Table");
 		const DOName = DOobject.name;

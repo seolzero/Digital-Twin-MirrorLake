@@ -14,8 +14,8 @@ exports.mqtt = {
 };
 
 exports.kafka = {
-	host: "172.20.171.179:9092",
-	connectHost: "172.20.171.179:8083",
+	host: "172.27.172.121:9092",
+	connectHost: "172.27.172.121:8083",
 };
 
 exports.flink = {
@@ -28,7 +28,7 @@ exports.flink = {
 		},
 	},
 	gwOption: {
-		hostname: "172.20.171.179",
+		hostname: "172.27.172.121",
 		port: 8087,
 	},
 };

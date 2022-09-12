@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const port = 1005;
 
 exports.init = ({ app }) => {
 	// body parser
@@ -38,6 +40,11 @@ exports.init = ({ app }) => {
 		function (req, res, next) {
 			res.send("Bad Request (Wrong Url)", 404);
 		};
+
+	const server = http.createServer(app);
+	server.listen(port, () => {
+		console.log(`Server Start on port ${port}`);
+	});
 
 	return app;
 };

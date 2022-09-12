@@ -10,7 +10,7 @@ router.post("/flink/:sessionId", (req, res) => {
 	global.SESSION_ID = req.params.sessionId;
 	console.log("sessionID: ", global.SESSION_ID);
 
-	res.end();
+	res.success();
 });
 
 module.exports = router;

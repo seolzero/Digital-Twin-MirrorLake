@@ -12,7 +12,7 @@ class Service {
 		return this[className];
 	}
 
-	get DO() {
+	get do() {
 		return this.#getInstance(DO);
 	}
 }
