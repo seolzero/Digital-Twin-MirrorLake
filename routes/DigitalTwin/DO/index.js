@@ -25,36 +25,6 @@ router.post("/", async function (req, res) {
 		}
 		e.handle(req, res, "POST /DigitalTwin/DO");
 	}
-
-	// let fullBody = "";
-	// req.on("data", function (chunk) {
-	// 	fullBody += chunk;
-	// });
-
-	req.on("end", async function () {
-		if (tryJSONparse(fullBody)) {
-			DOWholeData = tryJSONparse(fullBody);
-			if (DOWholeData?.name && DOWholeData?.sensor && DOWholeData.sensor.length > 0) {
-				const flag = await checkNameExist(DOWholeData.name, "DO").then(function (flag) {
-					return flag;
-				});
-				if (flag) {
-					res.status(500).send("DO is already exist");
-				} else {
-					const DOName = DOWholeData.name;
-					Rclient.rpush("DO", DOName);
-					const DOobject = CheckKeyExistAndAddCount(DOWholeData);
-					Rclient.set(DOName, JSON.stringify(DOobject));
-					create_flink_DO_table(DOobject);
-					res.status(200).send(DOobject);
-				}
-			} else {
-				res.status(500).send("please check mandatory field");
-			}
-		} else {
-			res.status(500).send("is not a json structure");
-		}
-	});
 });
 
 /*
