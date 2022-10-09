@@ -65,23 +65,37 @@ router.get("/all", async function (req, res) {
 
 /*
  * DO DELETE
+ * localhost:1005/DigitalTwin/DO?name=DOcrain26
  */
-router.delete("/:DOName", async (req, res) => {
-	if (req.params.DOName) {
-		let DOName = req.params.DOName;
-		const flag = await checkNameExist(DOName, "DO").then(function (flag) {
-			return flag;
-		});
-		if (flag) {
-			Rclient.DEL(DOName);
-			Rclient.LREM("DO", -1, DOName);
-			res.send({ success: 1 });
-		} else {
-			res.status(200).send("Unregistered DO");
+router.delete("/", async (req, res) => {
+	const { name } = req.query;
+	try {
+		const result = await service.do.delete({ name });
+
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-	} else {
-		res.status(404).send("Bad Request");
-		console.log("input value error");
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
+	}
+});
+
+/*
+ * DO Entire Delete
+ */
+router.delete("/all", async function (req, res) {
+	try {
+		const result = await service.do.deleteAll();
+
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
 	}
 });
 

@@ -60,6 +60,29 @@ class DO {
 		return DONameEntireList;
 	}
 
+
+	async delete({ name }) {
+		const model = new Model();
+
+		const isExistName = await model.redis.checkNameExist({ name, key: "DO" });
+		if (isExistName) {
+			await model.redis.delete({ name });
+			await model.redis.removeFromList({ name, key: "DO" });
+
+			return { delete: name };
+		} else {
+			return "Unregistered DO";
+		}
+	}
+
+	async deleteAll() {
+		const model = new Model();
+
+		await model.redis.delete({ name: "DO" });
+
+		return { delete: "DO List" };
+	}
+
 	CheckKeyExistAndAddCount(DOWholeData) {
 		if (Object.keys(DOWholeData).some((v) => v == "sensor")) {
 			DOWholeData.sensorCount = DOWholeData.sensor.length;

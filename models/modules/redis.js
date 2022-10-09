@@ -35,6 +35,24 @@ class Redis {
 	}
 
 	/**
+	 * set에서 name 삭제
+	 * @param {String} name (required)
+	 * @returns
+	 */
+	delete({ name }) {
+		return Rclient.DEL(name);
+	}
+
+	/**
+	 * 리스트에서 name 삭제
+	 * @param {String} name (required)
+	 * @returns
+	 */
+	removeFromList({ name }) {
+		return Rclient.LREM("DO", -1, name);
+	}
+
+	/**
 	 * redis의 특정 키에 저장된 모든 이름 조회
 	 * @param {String} key (required)
 	 * @returns {String Array} [] redis에 저장된 모든 key들의 이름
