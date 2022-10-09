@@ -39,13 +39,13 @@ class DO {
 		return obj;
 	}
 
-	async get({ DOname }) {
+	async get({ name }) {
 		const model = new Model();
 
-		const isExistName = await model.redis.checkNameExist({ name: DOname, key: "DO" });
+		const isExistName = await model.redis.checkNameExist({ name, key: "DO" });
 		// DOname이 존재하면 조회
 		if (isExistName) {
-			const result = await model.redis.get({ name: DOname });
+			const result = await model.redis.get({ name });
 
 			return result;
 		} else {

@@ -29,11 +29,12 @@ router.post("/", async function (req, res) {
 
 /*
  * DO Retrieve
+ * localhost:1005/DigitalTwin/DO?name=DOcrain26
  */
-router.get("/:DOname", async (req, res) => {
-	const { DOname } = req.params;
+router.get("/", async (req, res) => {
+	const { name } = req.query;
 	try {
-		const result = await service.do.get({ DOname });
+		const result = await service.do.get({ name });
 
 		res.success(200, result);
 	} catch (e) {
@@ -41,7 +42,7 @@ router.get("/:DOname", async (req, res) => {
 			console.log(e);
 			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-		e.handle(req, res, `Retrieve /DigitalTwin/DO/${DOname}`);
+		e.handle(req, res, `Retrieve /DigitalTwin/DO`);
 	}
 });
 
