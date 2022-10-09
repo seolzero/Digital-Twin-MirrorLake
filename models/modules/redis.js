@@ -17,6 +17,23 @@ class Redis {
 	set({ name, obj }) {
 		return Rclient.set(name, JSON.stringify(obj));
 	}
+
+	/**
+	 * name으로 조회
+	 * @param {String} name (required)
+	 * @returns {Promise}
+	 */
+	get({ name }) {
+		return new Promise((resolve, reject) => {
+			Rclient.get(name, (err, value) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(JSON.parse(value));
+			});
+		});
+	}
+
 	/**
 	 * redis의 특정 키에 저장된 모든 이름 조회
 	 * @param {String} key (required)

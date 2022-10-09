@@ -30,23 +30,18 @@ router.post("/", async function (req, res) {
 /*
  * DO Retrieve
  */
-router.get("/:DOName", async (req, res) => {
-	if (req.params.DOName) {
-		let DOName = req.params.DOName;
-		const flag = await checkNameExist(DOName, "DO").then(function (flag) {
-			return flag;
-		});
-		if (flag) {
-			Rclient.get(DOName, function (err, value) {
-				if (err) throw err;
-				res.status(200).send(JSON.parse(value));
-			});
-		} else {
-			res.status(200).send("Unregistered DO");
+router.get("/:DOname", async (req, res) => {
+	const { DOname } = req.params;
+	try {
+		const result = await service.do.get({ DOname });
+
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-	} else {
-		res.status(404).send("Bad Request");
-		console.log("input value error");
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/${DOname}`);
 	}
 });
 

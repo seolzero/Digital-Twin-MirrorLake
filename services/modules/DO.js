@@ -39,6 +39,20 @@ class DO {
 		return obj;
 	}
 
+	async get({ DOname }) {
+		const model = new Model();
+
+		const isExistName = await model.redis.checkNameExist({ name: DOname, key: "DO" });
+		// DOname이 존재하면 조회
+		if (isExistName) {
+			const result = await model.redis.get({ name: DOname });
+
+			return result;
+		} else {
+			return "Unregistered DO";
+		}
+	}
+
 	CheckKeyExistAndAddCount(DOWholeData) {
 		if (Object.keys(DOWholeData).some((v) => v == "sensor")) {
 			DOWholeData.sensorCount = DOWholeData.sensor.length;
