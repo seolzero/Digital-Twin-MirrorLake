@@ -49,10 +49,18 @@ router.get("/", async (req, res) => {
 /*
  * DO Entire Retrieve
  */
-router.get("/", async function (req, res) {
-	let DONameEntireList = await getNameList("DO").then((List) => {
-		res.status(200).send(JSON.parse(DONameEntireList));
-	});
+router.get("/all", async function (req, res) {
+	try {
+		const result = await service.do.getAll();
+
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
+	}
 });
 
 /*

@@ -53,6 +53,13 @@ class DO {
 		}
 	}
 
+	async getAll() {
+		const model = new Model();
+		let DONameEntireList = await model.redis.getNameList("DO");
+
+		return DONameEntireList;
+	}
+
 	CheckKeyExistAndAddCount(DOWholeData) {
 		if (Object.keys(DOWholeData).some((v) => v == "sensor")) {
 			DOWholeData.sensorCount = DOWholeData.sensor.length;
