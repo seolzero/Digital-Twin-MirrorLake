@@ -6,7 +6,7 @@ const fs = require("fs");
 const dirs = fs.readdirSync(__dirname).filter((d) => fs.lstatSync(__dirname + "/" + d).isDirectory());
 
 dirs.forEach((dir) => {
-	if (dir == "DO") {
+	if (["DO", "flink"].includes(dir)) {
 		const r = require("./" + dir);
 		router.use("/" + dir, r);
 		console.log("\t/" + dir);

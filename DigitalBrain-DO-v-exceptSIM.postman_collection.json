@@ -1,0 +1,1462 @@
+{
+	"info": {
+		"_postman_id": "b45a6e23-afc1-4e4f-b979-3386570bff95",
+		"name": "DigitalBrain-DO-v-exceptSIM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11129151"
+	},
+	"item": [
+		{
+			"name": "simulationGroup",
+			"item": [
+				{
+					"name": "1005/DigitalTwin/simulationGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"SIcr01\",\r\n  \"arg\": {  \"DOcr001\": {    \"angle\": {      \"dim\": [28, 28]    }, \"heading\": {      \"dim\": [28, 28]    }  }},\r\n  \"url\": \"http://192.168.10.9:7972/sim\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1209/DigitalTwin/simulationGroup -SVR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"SVR_TEMP_24\",\r\n  \"arg\": {  \"TEMP_24\": {    \"temperature_24\": {      \"dim\": [28, 28]    }}},\r\n  \"url\": \"http://203.254.171.126:7890/inference/svr_24\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/simulationGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1209/DigitalTwin/simulationGroup - LSTM",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"LSTM_TEMP_24\",\r\n  \"arg\": {  \"TEMP_24\": {    \"temperature_24\": {      \"dim\": [28, 28]    }  }},\r\n  \"url\": \"http://203.254.171.126:9090/predictions/lstm24\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/simulationGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1209/DigitalTwin/simulationGroup -conv",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"CONV_TEMP_25\",\r\n  \"arg\": { \"DO_TEMP_25\": { \"temperature_25\": {      \"dim\": [28, 28]    }}},\r\n  \"url\": \"http://203.254.171.126:2431/inference/conv1d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/simulationGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup Copy 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"SIrsp\",\r\n  \"arg\": { \"DOrsp01\": { \"rsp\": {      \"dim\": [28, 28]    }}},\r\n  \"url\": \"http://192.168.10.9:8080/RSPsim\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationRTtrigger/:simName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationRTtrigger/:simName",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationRTtrigger",
+								":simName"
+							],
+							"variable": [
+								{
+									"key": "simName",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1209/DigitalTwin/simulationRTtrigger/-36server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationRTtrigger/:simName",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationRTtrigger",
+								":simName"
+							],
+							"variable": [
+								{
+									"key": "simName",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationSTtrigger/:simName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"data\": {\r\n    \"data1\": \"xxxxx\",\r\n    \"data2\": \"yyyyy\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationSTtrigger/:simName",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationSTtrigger",
+								":simName"
+							],
+							"variable": [
+								{
+									"key": "simName",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup/:simName",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/sssim1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"sssim1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup/:simName Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/sssim1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"sssim1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "/DigitalTwin/simulation/all - 36번 서버",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/sssim1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"sssim1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup/:simName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/simulation1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"simulation1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup/:simName Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/simulation1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"simulation1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"simulation1\",\r\n  \"arg\": [\"DO1\", \"DO2\", \"DO3\"],\r\n  \"url\": \"http://203.254.173.175:8080\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulationGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulationGroup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "serviceGroup",
+			"item": [
+				{
+					"name": "1005/DigitalTwin/serviceGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Servcr01\",\r\n  \"DO_arg\": {\"DOrc01\":{\"angle\":{\"dim\":[28,28]},\"heading\":{\"dim\":[1]}}},\r\n  \"SIM_arg\":{\"SIMcr01\":\"\"},\r\n  \"url\": \"mqtt://192.168.10.9:1883\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/serviceGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "36/DigitalTwin/serviceGroup -SVR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"service-svr\",\r\n  \"DO_arg\": {\"DOrc01\":{\"angle\":{\"dim\":[28,28]},\"heading\":{\"dim\":[1]}}},\r\n  \"SIM_arg\":{\"SI_SVR_TEMP_01\":\"\", \"SI_SVR_TEMP_02\":\"\", \"SI_SVR_TEMP_03\":\"\", \"SI_SVR_TEMP_04\":\"\",\"SI_SVR_TEMP_05\":\"\", \"SI_SVR_TEMP_06\":\"\", \"SI_SVR_TEMP_07\":\"\", \"SI_SVR_TEMP_08\":\"\",\"SI_SVR_TEMP_09\":\"\", \"SI_SVR_TEMP_10\":\"\", \"SI_SVR_TEMP_11\":\"\", \"SI_SVR_TEMP_12\":\"\",\"SI_SVR_TEMP_13\":\"\", \"SI_SVR_TEMP_14\":\"\", \"SI_SVR_TEMP_15\":\"\", \"SI_SVR_TEMP_16\":\"\",\"SI_SVR_TEMP_17\":\"\", \"SI_SVR_TEMP_18\":\"\", \"SI_SVR_TEMP_19\":\"\", \"SI_SVR_TEMP_20\":\"\",\"SI_SVR_TEMP_21\":\"\", \"SI_SVR_TEMP_22\":\"\", \"SI_SVR_TEMP_23\":\"\", \"SI_SVR_TEMP_24\":\"\"},\r\n  \"url\": \"http://203.254.171.126:1005/SVR\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/serviceGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "36/DigitalTwin/serviceGroup -lstm",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Service-lstm\",\r\n  \"DO_arg\": {\"DOrc01\":{\"angle\":{\"dim\":[28,28]},\"heading\":{\"dim\":[1]}}},\r\n  \"SIM_arg\":{\"SI_LSTM_TEMP_01\":\"\", \"SI_LSTM_TEMP_02\":\"\", \"SI_LSTM_TEMP_03\":\"\", \"SI_LSTM_TEMP_04\":\"\",\"SI_LSTM_TEMP_05\":\"\", \"SI_LSTM_TEMP_06\":\"\", \"SI_LSTM_TEMP_07\":\"\", \"SI_LSTM_TEMP_08\":\"\",\"SI_LSTM_TEMP_09\":\"\", \"SI_LSTM_TEMP_10\":\"\", \"SI_LSTM_TEMP_11\":\"\", \"SI_LSTM_TEMP_12\":\"\",\"SI_LSTM_TEMP_13\":\"\", \"SI_LSTM_TEMP_14\":\"\", \"SI_LSTM_TEMP_15\":\"\", \"SI_LSTM_TEMP_16\":\"\",\"SI_LSTM_TEMP_17\":\"\", \"SI_LSTM_TEMP_18\":\"\", \"SI_LSTM_TEMP_19\":\"\", \"SI_LSTM_TEMP_20\":\"\",\"SI_LSTM_TEMP_21\":\"\", \"SI_LSTM_TEMP_22\":\"\", \"SI_LSTM_TEMP_23\":\"\", \"SI_LSTM_TEMP_24\":\"\"},\r\n  \"url\": \"http://203.254.171.126:1005/LSTM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/serviceGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "36/DigitalTwin/serviceGroup-conv",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Service-test\",\r\n  \"DO_arg\": {\"TEMP_01\":\"\",\"TEMP_02\":\"\",\"TEMP_03\":\"\",\"TEMP_04\":\"\",\"TEMP_05\":\"\",\"TEMP_06\":\"\",\"TEMP_07\":\"\",\"TEMP_08\":\"\",\"TEMP_09\":\"\",\"TEMP_10\":\"\",\"TEMP_11\":\"\",\"TEMP_12\":\"\",\"TEMP_13\":\"\",\"TEMP_14\":\"\",\"TEMP_15\":\"\",\"TEMP_16\":\"\",\"TEMP_17\":\"\",\"TEMP_18\":\"\",\"TEMP_19\":\"\",\"TEMP_20\":\"\",\"TEMP_21\":\"\",\"TEMP_22\":\"\",\"TEMP_23\":\"\",\"TEMP_24\":\"\"},\r\n  \"SIM_arg\":{},\r\n  \"url\": \"http://192.168.1.191:8000/history/setdata\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/serviceGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "36/DigitalTwin/serviceGroup default",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Service-test\",\r\n  \"DO_arg\": {\"TEMP_01\":\"\",\"TEMP_02\":\"\",\"TEMP_03\":\"\",\"TEMP_04\":\"\",\"TEMP_05\":\"\",\"TEMP_06\":\"\",\"TEMP_07\":\"\",\"TEMP_08\":\"\",\"TEMP_09\":\"\",\"TEMP_10\":\"\",\"TEMP_11\":\"\",\"TEMP_12\":\"\",\"TEMP_13\":\"\",\"TEMP_14\":\"\",\"TEMP_15\":\"\",\"TEMP_16\":\"\",\"TEMP_17\":\"\",\"TEMP_18\":\"\",\"TEMP_19\":\"\",\"TEMP_20\":\"\",\"TEMP_21\":\"\",\"TEMP_22\":\"\",\"TEMP_23\":\"\",\"TEMP_24\":\"\"},\r\n  \"SIM_arg\":{},\r\n  \"url\": \"http://192.168.1.191:8000/history/setdata\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/serviceGroup",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/serviceGroup Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Servcr01\",\r\n  \"DO_arg\": {\"DOrc01\":{\"angle\":{\"dim\":[28,28]},\"heading\":{\"dim\":[1]}}},\r\n  \"SIM_arg\":{\"SIMcr01\":\"\"},\r\n  \"url\": \"mqtt://192.168.10.9:1883\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/serviceGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/serviceGroup Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"svHeading1\",\r\n  \"DO_arg\": {\"DOHeading1\":{\"sensor1\":{\"dim\":[28,28]},\"sensor2\":{\"dim\":[1]}}},\r\n  \"SIM_arg\":{\"simHeading1\":\"\"},\r\n  \"url\": \"mqtt://192.168.1.25:1883\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/serviceGroup",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service/trigger/:ServiceName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service/trigger/svHeading1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service",
+								"trigger",
+								"svHeading1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DigitalTwin/service/trigger/:ServiceName - 36번 서버",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/service/trigger/Servtes",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"service",
+								"trigger",
+								"Servtes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service/:service",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/serviceGroup/service1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup",
+								"service1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "/DigitalTwin/serviceGroup/:serviceName - 36번 서버",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/serviceGroup/service1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"serviceGroup",
+								"service1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DO",
+			"item": [
+				{
+					"name": "1005/DigitalTwin/DO | create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"DOcrain02\",\r\n  \"sensor\": [\r\n    \"angle\", \"heading\"\r\n  ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | create -36server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"TEMP_01\",\r\n  \"sensor\": [\r\n    \"temperature_01\"\r\n  ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/DO",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | create -36server Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"TEMP_25\",\r\n  \"sensor\": [\r\n        \"temperature_01\",\r\n        \"temperature_02\",\r\n        \"temperature_03\",\r\n        \"temperature_04\",\r\n        \"temperature_05\",\r\n        \"temperature_06\",\r\n        \"temperature_07\",\r\n        \"temperature_08\",\r\n        \"temperature_09\",\r\n        \"temperature_10\",\r\n        \"temperature_11\",\r\n        \"temperature_12\",\r\n        \"temperature_13\",\r\n        \"temperature_14\",\r\n        \"temperature_15\",\r\n        \"temperature_16\",\r\n        \"temperature_17\",\r\n        \"temperature_18\",\r\n        \"temperature_19\",\r\n        \"temperature_20\",\r\n        \"temperature_21\",\r\n        \"temperature_22\",\r\n        \"temperature_23\",\r\n        \"temperature_24\"\r\n    ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/DO",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | create -36server Copy 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"TEMP_25\",\r\n  \"sensor\": [\r\n        \"temperature_01\",\r\n        \"temperature_02\",\r\n        \"temperature_03\",\r\n        \"temperature_04\",\r\n        \"temperature_05\",\r\n        \"temperature_06\",\r\n        \"temperature_07\",\r\n        \"temperature_08\",\r\n        \"temperature_09\",\r\n        \"temperature_10\",\r\n        \"temperature_11\",\r\n        \"temperature_12\",\r\n        \"temperature_13\",\r\n        \"temperature_14\",\r\n        \"temperature_15\",\r\n        \"temperature_16\",\r\n        \"temperature_17\",\r\n        \"temperature_18\",\r\n        \"temperature_19\",\r\n        \"temperature_20\",\r\n        \"temperature_21\",\r\n        \"temperature_22\",\r\n        \"temperature_23\",\r\n        \"temperature_24\"\r\n    ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/DO",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | rsp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"DOrsp04\",\r\n  \"sensor\": [\r\n    \"rsp02\"\r\n  ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | CD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"DOrsp04\",\r\n  \"sensor\": [\r\n    \"rsp02\"\r\n  ]\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO+container | create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"DO2\",\r\n  \"sensor\": [\r\n    \"PO1.boom_angle\",\r\n    \"PO1.crane_rotation\",\r\n    \"Cam\"\r\n  ],\r\n  \"control\": [\r\n    {\r\n      \"name\": \"crane_control\",\r\n      \"args\": \"1627475400001, 320, -, -\",\r\n      \"url\": \"http://\"\r\n    },\r\n    {\r\n      \"name\": \"crane_angle\",\r\n      \"args\": \"1627475400001, 320, -, -\",\r\n      \"url\": \"http://\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"service1\",\r\n  \"arg\": [\"DO1\", \"DO2\"],\r\n  \"url\": \"http://203.254.173.175:8080\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service/trigger",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"service1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service/trigger",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service",
+								"trigger"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"sssim1\",\r\n  \"arg\": [\"sssul\", \"ssso\"],\r\n  \"url\": \"http://203.254.173.175:1203\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulationRTtrigger/:simName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"simulation1\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/trigger",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"trigger"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/:DO | retreive",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DOt1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DOt1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO/list | retreive",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO/list",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO/list | retreive Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO/list",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service/:service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service/service1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service",
+								"service1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulation/:simulation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/simulation1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"simulation1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/DO | update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"DO3\",\r\n  \"sensor\": [\r\n    \"PO1.boom_angle\",\r\n    \"PO1.crane_rotation\",\r\n    \"Cam\"\r\n  ],\r\n  \"control\": [\r\n    {\r\n      \"name\": \"crane_control\",\r\n      \"args\": \"1627475400001, 320, -, -\",\r\n      \"url\": \"http://\"\r\n    },\r\n    {\r\n      \"name\": \"crane_angle\",\r\n      \"args\": \"1627475400001, 320, -, -\",\r\n      \"url\": \"http://\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service | update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"service1\",\r\n  \"arg\": [\"DO1\", \"DO2\", \"DO3\"],\r\n  \"url\": \"http://203.254.173.175:8080\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"simulation1\",\r\n  \"arg\": [\"DO1\", \"DO2\", \"DO3\"],\r\n  \"url\": \"http://203.254.173.175:8080\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/:DOname",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/DO2",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"DO2"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "DigitalTwin/DO/all - 36번 서버",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/DO/all",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"DO",
+								"all"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/:DOname Copy 2",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://10.252.73.36:1209/DigitalTwin/DO/all",
+							"protocol": "http",
+							"host": [
+								"10",
+								"252",
+								"73",
+								"36"
+							],
+							"port": "1209",
+							"path": [
+								"DigitalTwin",
+								"DO",
+								"all"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/service/:service",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/service/service1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"service",
+								"service1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				},
+				{
+					"name": "1005/DigitalTwin/simulation/:simulation",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZWI1MTc5OWUzOGIxZGMiLCJpYXQiOjE2MTAwODY4MzUsImV4cCI6MTYxNTI3MDgzNX0.Irf9Twaq3DFhX0IOvfRTUCMSt6sRj2C0-jEY8rpjDRM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:1005/DigitalTwin/simulation/sssim1",
+							"host": [
+								"localhost"
+							],
+							"port": "1005",
+							"path": [
+								"DigitalTwin",
+								"simulation",
+								"sssim1"
+							]
+						},
+						"description": "DB에 저장된 device token 삭제"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

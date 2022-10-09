@@ -1,0 +1,496 @@
+{
+	"info": {
+		"_postman_id": "731b37bd-c83d-400e-b23a-f49d2bfd4815",
+		"name": "DigitalConnector-sensor-v-sensorGroup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11129151"
+	},
+	"item": [
+		{
+			"name": "Create Sensor Group - crain",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"angle\",\r\n  \"mq\": [\r\n    \"kafka\"\r\n  ],\r\n  \"id\":\"crane\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Sensor Group - 36server",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"angle\",\r\n  \"mq\": [\r\n    \"kafka\"\r\n  ],\r\n  \"id\":\"crane\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Sensor Group - rsp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"rsp02\",\r\n  \"mq\": [\r\n    \"kafka\"\r\n  ],\r\n  \"id\":\"rockscissorspaper\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Sensor Group - CD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"rsp02\",\r\n  \"mq\": [\r\n    \"kafka\"\r\n  ],\r\n  \"id\":\"rockscissorspaper\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send  Sensor data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"con\": \"29\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/power",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"power"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send  Sensor data Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"con\": \"29\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/power",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"power"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send  Sensor data Copy 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"data\": {\r\n    \"con\": \"29\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/power",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"power"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Sensor Group",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"temperature\",\r\n  \"mq\": [\r\n    \"kafka\",\r\n    \"mqtt\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Sensor Group Copy -36server",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"temperature\",\r\n  \"mq\": [\r\n    \"kafka\",\r\n    \"mqtt\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Sensor data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"temperature\",\r\n  \"mq\": [\r\n    \"kafka\",\r\n    \"mqtt\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/temper",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"temper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Sensor data Copy -36server",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"temperature\",\r\n  \"mq\": [\r\n    \"kafka\",\r\n    \"mqtt\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/temper",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"temper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Sensor Group",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Sensor Group - 36번 서버",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://10.252.73.36:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"10",
+						"252",
+						"73",
+						"36"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Sensor data",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/temp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"temp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Sensor data Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup/temp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup",
+						"temp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update Sensor Group",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"temp\",\r\n  \"mq\": [\r\n    \"kafka\",\r\n    \"mqtt\"\r\n  ],\r\n  \"id\":\"truck\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1220/DigitalConnector/SensorGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1220",
+					"path": [
+						"DigitalConnector",
+						"SensorGroup"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

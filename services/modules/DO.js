@@ -25,18 +25,18 @@ class DO {
 		Rclient.rpush("DO", name);
 
 		// redis에 key:value 데이터 생성
-		const params = {
+		const obj = {
 			name,
 			sensor,
 			sensorCount: sensor.length,
 			creationTime: new Date().getTime(),
 		};
-		Rclient.set(name, JSON.stringify(params));
+		Rclient.set(name, JSON.stringify(obj));
 
 		// flink를 이용해 kafka에 DO 테이블 생성
-		await model.flink.createDOtable({ params });
+		await model.flink.createDOTable({ obj });
 
-		return params;
+		return obj;
 	}
 
 	CheckKeyExistAndAddCount(DOWholeData) {

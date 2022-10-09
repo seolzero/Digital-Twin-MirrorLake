@@ -1,5 +1,6 @@
 const config = require("../../config");
-const { hostname, port } = config.flink;
+const { hostname, port } = config.flink.gwOption;
+const { default: axios } = require("axios");
 
 class Flink {
 	constructor() {
@@ -10,18 +11,39 @@ class Flink {
 		this.gwOptions = {
 			hostname,
 			port,
-			path: `/v1/sessions/${global.SESSION_ID}/statements`,
-			method: POST,
+			path: `v1/sessions/${global.SESSION_ID}/statements`,
+			method: "POST",
 		};
 	}
 
 	/**
-	 * DO 데이터를 이용해 kafka에 테이블 생성
-	 * @param {Json} DOobject
+	 *
+	 * @param {String} method
+	 * @param {String} url
+	 * @param {Json} queryParams
+	 * @param {Json} bodyParams
+	 * @returns
 	 */
-	createDOTable(DOobject) {
+	async #request({ method, url, queryParams, bodyParams }) {
+		try {
+			method = this.gwOptions.method;
+			url = `http://${this.gwOptions.hostname}:${this.gwOptions.port}/${this.gwOptions.path}`;
+
+			const response = await axios({ method, url, params: queryParams, data: bodyParams });
+
+			return response.data;
+		} catch (e) {
+			console.log(e.response.data);
+		}
+	}
+
+	/**
+	 * DO 데이터를 이용해 kafka에 테이블 생성
+	 * @param {Json} obj
+	 */
+	async createDOTable({ obj }) {
 		console.log("create DO Table");
-		const DOName = DOobject.name;
+		const DOName = obj.name;
 
 		// Create DO Table
 		let createStreamSQL = {
@@ -29,7 +51,7 @@ class Flink {
 		};
 
 		// Get Sensor List from DO Object
-		let sensorList = DOobject.sensor;
+		let sensorList = obj.sensor;
 		console.log(sensorList);
 
 		if (sensorList.length == 1) {
@@ -37,7 +59,7 @@ class Flink {
 		} else {
 			createStreamSQL.statement = `CREATE TABLE ${DOName} (tmpA BIGINT, sensor1_rowtime TIMESTAMP(3), `;
 
-			for (i = 1; i <= sensorList.length; i++) {
+			for (let i = 1; i <= sensorList.length; i++) {
 				createStreamSQL.statement += `sensor${i}_id STRING, sensor${i}_value STRING, `;
 			}
 
@@ -55,7 +77,7 @@ class Flink {
 		} else {
 			insertTableSQL.statement += `${sensorList[0]}.tmp, ${sensorList[0]}.sensor_rowtime, `;
 
-			for (i = 0; i < sensorList.length; i++) {
+			for (let i = 0; i < sensorList.length; i++) {
 				insertTableSQL.statement += `${sensorList[i]}.sensor_id, ${sensorList[i]}.sensor_value `;
 				if (i != sensorList.length - 1) {
 					insertTableSQL.statement += `, `;
@@ -64,50 +86,18 @@ class Flink {
 				}
 			}
 
-			for (i = 0; i < sensorList.length - 1; i++) {
-				insertTableSQL.statement += `left join ${sensorList[i + 1]} for system_time as of ${sensorList[i]}.sensor_rowtime on ${sensorList[i + 1]}.tmp=${sensorList[i]}.tmp `;
+			for (let i = 0; i < sensorList.length - 1; i++) {
+				insertTableSQL.statement += `left join ${sensorList[i + 1]} for system_time as of ${sensorList[i]}.sensor_rowtime on ${sensorList[i + 1]}.tmp=${sensorList[i]}.tmp`;
 			}
 		}
 
 		console.log("insertTableSQL: ", insertTableSQL);
 
-		//Send Request to sql-gateway Server
-		var request = http.request(this.gwOptions, function (response) {
-			let fullBody = "";
+		const createTable = await this.#request({ bodyParams: createStreamSQL });
+		console.log(createTable.results);
 
-			response.on("data", function (chunk) {
-				fullBody += chunk;
-			});
-
-			response.on("end", function () {
-				console.log(fullBody);
-				console.log("Insert Sensor Table to DO Table");
-
-				var insertRequest = http.request(this.gwOptions, function (insertResponse) {
-					let fullBody = "";
-
-					insertResponse.on("data", function (chunk) {
-						fullBody += chunk;
-					});
-
-					insertResponse.on("end", function () {
-						console.log(fullBody);
-					});
-
-					insertResponse.on("error", function (error) {
-						console.error(error);
-					});
-				});
-				insertRequest.write(JSON.stringify(insertTableSQL));
-				insertRequest.end();
-			});
-
-			response.on("error", function (error) {
-				console.error(error);
-			});
-		});
-		request.write(JSON.stringify(createStreamSQL));
-		request.end();
+		const insertData = await this.#request({ bodyParams: insertTableSQL });
+		console.log(insertData.results);
 	}
 }
 
