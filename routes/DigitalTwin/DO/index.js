@@ -102,6 +102,11 @@ router.delete("/all", async function (req, res) {
 /*
  * DO UPDATE
  * flink alter table 구현X
+ * CREATE TABLE DOt (tmpA BIGINT, sensor1_rowtime TIMESTAMP(3), sensor1_id STRING, sensor1_value STRING, sensor2
+_id STRING, sensor2_value STRING, PRIMARY KEY (tmpA) NOT ENFORCED) WITH('connector' = 'upsert-kafka', 'topic' = 'DO_DOcr
+ain26','properties.bootstrap.servers' = 'localhost:9092', 'key.format' = 'json', 'value.format' = 'json');
+ * alter table DOt SET  ('tmpA'='ssul1');
+ * org.apache.flink.table.api.ValidationException: Unsupported options found for connector 'upsert-kafka'.
  */
 router.put("/", async (req, res) => {
 	try {
