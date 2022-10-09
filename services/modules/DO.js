@@ -60,6 +60,32 @@ class DO {
 		return DONameEntireList;
 	}
 
+	async update({ name, sensor }) {
+		if (!name || !sensor || sensor.length < 1) {
+			throw new ErrorHandler(412, 5252, "please check mandatory field.");
+		}
+
+		const model = new Model();
+
+		const isExistName = await model.redis.checkNameExist({ name, key: "DO" });
+		if (!isExistName) {
+			throw new ErrorHandler(412, 5252, "Unregistered DO");
+		}
+
+		// redis에 key:value 데이터 생성
+		const obj = {
+			name,
+			sensor,
+			sensorCount: sensor.length,
+			creationTime: new Date().getTime(),
+		};
+		await model.redis.set({ name, obj });
+
+		// flink DO 테이블 수정
+		await model.flink.updateDOTable({ obj });
+
+		return obj;
+	}
 
 	async delete({ name }) {
 		const model = new Model();

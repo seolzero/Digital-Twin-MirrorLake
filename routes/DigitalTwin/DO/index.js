@@ -101,37 +101,22 @@ router.delete("/all", async function (req, res) {
 
 /*
  * DO UPDATE
+ * flink alter table 구현X
  */
 router.put("/", async (req, res) => {
-	var fullBody = "";
-	req.on("data", function (chunk) {
-		fullBody += chunk;
-	});
+	try {
+		const { name, sensor } = req.body;
 
-	req.on("end", async function () {
-		if (tryJSONparse(fullBody)) {
-			DOWholeData = tryJSONparse(fullBody);
-			if (DOWholeData?.name && DOWholeData?.sensor && DOWholeData.sensor.length > 0) {
-				const flag = await checkNameExist(DOWholeData.name, "DO").then(function (flag) {
-					return flag;
-				});
-				if (!flag) {
-					res.status(500).send("Unregistered DO");
-				} else {
-					const DOName = DOWholeData.name;
-					const DOobject = CheckKeyExistAndAddCount(DOWholeData);
-					console.log("DO: ", DOobject);
-					Rclient.set(DOName, JSON.stringify(DOobject));
-					postDOobjectToKSQL(DOobject); //post DOobject
-					res.status(200).send("update DO");
-				}
-			} else {
-				res.status(500).send("please check mandatory field");
-			}
-		} else {
-			res.status(500).send("is not a json structure");
+		const result = await service.do.update({ name, sensor });
+
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-	});
+		e.handle(req, res, "UPDATE /DigitalTwin/DO");
+	}
 });
 
 module.exports = router;

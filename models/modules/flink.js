@@ -99,6 +99,17 @@ class Flink {
 		const insertData = await this.#request({ bodyParams: insertTableSQL });
 		console.log(insertData.results);
 	}
+
+	async updateDOTable() {
+		console.log("update DO Table");
+		const DOName = obj.name;
+
+		// Get Sensor List from DO Object
+		let sensorList = obj.sensor;
+		console.log(sensorList);
+
+		// flink alter table...
+	}
 }
 
 module.exports = Flink;
