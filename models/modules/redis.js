@@ -1,5 +1,23 @@
 class Redis {
 	/**
+	 * DO 배열에 이름 추가
+	 * @param {String} name (required)
+	 * @returns {}
+	 */
+	pushDO({ name }) {
+		return Rclient.rpush("DO", name);
+	}
+
+	/**
+	 * 이름에 obj 삽입
+	 * @param {String} name (required)
+	 * @param {Json} obj (required)
+	 * @returns {}
+	 */
+	set({ name, obj }) {
+		return Rclient.set(name, JSON.stringify(obj));
+	}
+	/**
 	 * redis의 특정 키에 저장된 모든 이름 조회
 	 * @param {String} key (required)
 	 * @returns {String Array} [] redis에 저장된 모든 key들의 이름
