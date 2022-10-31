@@ -4,7 +4,8 @@ class DO {
 	/**
 	 * sensor 데이터를 담은 data object 생성
 	 *  1. redis에 중복된 이름 있는지 확인
-	 *  2.
+	 *  2. DO 이름이 담긴 배열에 새로운 DO name추가
+	 *  3. redis에 set으로 DO 저장 {key: DOname , value: DOobject}
 	 * @param {String} name (required)
 	 * @param {String Array} sensor (required)
 	 * @returns {Json} {}
@@ -39,6 +40,11 @@ class DO {
 		return obj;
 	}
 
+	/**
+	 * 특정 DO 조회
+	 * @param {string} name
+	 * @returns {Json}
+	 */
 	async get({ name }) {
 		const model = new Model();
 
@@ -53,6 +59,10 @@ class DO {
 		}
 	}
 
+	/**
+	 * 저장된 모든 DO의 이름 조회
+	 * @returns {List}
+	 */
 	async getAll() {
 		const model = new Model();
 		let DONameEntireList = await model.redis.getNameList("DO");
@@ -60,6 +70,12 @@ class DO {
 		return DONameEntireList;
 	}
 
+	/**
+	 * 저장된 DO 수정
+	 * @param {String} name (required)
+	 * @param {String Array} sensor (required)
+	 * @returns {Json} {}
+	 */
 	async update({ name, sensor }) {
 		if (!name || !sensor || sensor.length < 1) {
 			throw new ErrorHandler(412, 5252, "please check mandatory field.");
@@ -87,6 +103,11 @@ class DO {
 		return obj;
 	}
 
+	/**
+	 * 저장된 DO 삭제
+	 * @param {string} name
+	 * @returns {Json}
+	 */
 	async delete({ name }) {
 		const model = new Model();
 
@@ -101,6 +122,10 @@ class DO {
 		}
 	}
 
+	/**
+	 * 저장된 모든 DO 삭제
+	 * @returns {}
+	 */
 	async deleteAll() {
 		const model = new Model();
 
@@ -109,6 +134,11 @@ class DO {
 		return { delete: "DO List" };
 	}
 
+	/**
+	 * DO object 에 sensor와 control의 개수를 field를 추가
+	 * @param {Json} DOWholeData
+	 * @returns {Json}
+	 */
 	CheckKeyExistAndAddCount(DOWholeData) {
 		if (Object.keys(DOWholeData).some((v) => v == "sensor")) {
 			DOWholeData.sensorCount = DOWholeData.sensor.length;

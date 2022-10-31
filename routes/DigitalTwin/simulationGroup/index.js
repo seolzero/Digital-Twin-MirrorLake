@@ -2,8 +2,12 @@ const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
-/*
+/**
  * simulation Creation
+ * @body {String} name (required)
+ * @body {Json} arg (required)
+ * @body {String} url (required)
+ * @returns {Json} {}
  */
 router.post("/", async function (req, res) {
 	try {
@@ -21,45 +25,33 @@ router.post("/", async function (req, res) {
 	}
 });
 
-/*
+/**
  * simulation Update
+ * @body {String} name (required)
+ * @body {Json} arg (required)
+ * @body {String} url (required)
+ * @returns {Json} {}
  */
-router.put("/", function (req, res) {
-	let fullBody = "",
-		DataObject = "";
-	req.on("data", function (chunk) {
-		fullBody += chunk;
-	});
+router.put("/", async function (req, res) {
+	try {
+		const { name, arg, url } = req.body;
 
-	req.on("end", async function () {
-		if (tryJSONparse(fullBody)) {
-			DataObject = tryJSONparse(fullBody);
-			if (DataObject?.name && DataObject?.arg && DataObject?.url) {
-				const flag = await checkNameExist(DataObject.name, "simulation").then(function (flag) {
-					return flag;
-				});
-				if (!flag) {
-					res.status(500).send("Unregistered simulation");
-				} else {
-					const simulation = DataObject.name;
-					const sensorFields = Object.keys(DataObject);
-					for (var i = 0; i < sensorFields.length; i++) {
-						const field = sensorFields[i];
-						Rclient.hset(`simulation_${DataObject.name}`, sensorFields[i], JSON.stringify(DataObject[field]));
-					}
-					res.status(200).send("successfully update");
-				}
-			} else {
-				res.status(500).send("please check mandatory field");
-			}
-		} else {
-			res.status(500).send("is not a json structure");
+		const result = await service.simulation.update({ name, arg, url });
+
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-	});
+		e.handle(req, res, "POST /DigitalTwin/simulationGroup");
+	}
 });
 
-/*
+/**
  * simulation Retrieve
+ * @param {string} name (required)
+ * @returns {Json} {}
  */
 router.get("/:simulationName", async (req, res) => {
 	if (req.params.simulationName) {

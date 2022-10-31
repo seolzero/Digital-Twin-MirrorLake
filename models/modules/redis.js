@@ -63,6 +63,43 @@ class Redis {
 	}
 
 	/**
+	 * hkeys key
+	 * key에 속한 모든 field name을 조회
+	 * field name은 입력된 순서대로 나온다.
+	 * @param {string} name
+	 * @returns
+	 */
+	getKeys({ name }) {
+		return new Promise((resolve, reject) => {
+			Rclient.hkeys(name, (err, value) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(value);
+			});
+		});
+	}
+
+	/**
+	 * hget key field
+	 * field로 value를 조회
+	 * 지정한 field로 value를 조회한다
+	 * @param {string} name
+	 * @param {string} key
+	 * @returns
+	 */
+	getValue({ name, key }) {
+		return new Promise((resolve, reject) => {
+			Rclient.hget(name, key, (err, value) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(JSON.parse(value));
+			});
+		});
+	}
+
+	/**
 	 * redis의 특정 키에 저장된 모든 이름 조회
 	 * @param {String} key (required)
 	 * @returns {String Array} [] redis에 저장된 모든 key들의 이름
