@@ -5,39 +5,20 @@ const router = asyncify(express.Router());
 /*
  * simulation Creation
  */
-router.post("/", function (req, res) {
-	let fullBody = "",
-		DataObject = "";
-	req.on("data", function (chunk) {
-		fullBody += chunk;
-	});
+router.post("/", async function (req, res) {
+	try {
+		const { name, arg, url } = req.body;
 
-	req.on("end", async function () {
-		if (tryJSONparse(fullBody)) {
-			DataObject = tryJSONparse(fullBody);
-			if (DataObject?.name && DataObject?.arg && DataObject?.url) {
-				const flag = await checkNameExist(DataObject.name, "simulation").then(function (flag) {
-					return flag;
-				});
-				if (flag) {
-					res.status(500).send("is already exist");
-				} else {
-					const simulation = DataObject.name;
-					Rclient.rpush("simulation", simulation);
-					const sensorFields = Object.keys(DataObject);
-					for (var i = 0; i < sensorFields.length; i++) {
-						const field = sensorFields[i];
-						Rclient.hset(`simulation_${DataObject.name}`, field, JSON.stringify(DataObject[field]));
-					}
-					res.status(200).send(DataObject);
-				}
-			} else {
-				res.status(500).send("please check mandatory field");
-			}
-		} else {
-			res.status(500).send("is not a json structure");
+		const result = await service.simulation.create({ name, arg, url });
+
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
 		}
-	});
+		e.handle(req, res, "POST /DigitalTwin/simulationGroup");
+	}
 });
 
 /*

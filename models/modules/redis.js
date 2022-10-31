@@ -1,11 +1,11 @@
 class Redis {
 	/**
-	 * DO 배열에 이름 추가
+	 * 배열에 추가
 	 * @param {String} name (required)
 	 * @returns {}
 	 */
-	pushDO({ name }) {
-		return Rclient.rpush("DO", name);
+	rpush({ key, name }) {
+		return Rclient.rpush(key, name);
 	}
 
 	/**
@@ -50,6 +50,16 @@ class Redis {
 	 */
 	removeFromList({ name }) {
 		return Rclient.LREM("DO", -1, name);
+	}
+
+	/**
+	 * hash map 저장
+	 * key에 여러개의 field와 value를 저장할 수 있다
+	 * 기존에 같은 field가 있으면 덮어쓴다
+	 * key마다 field 가 달라도 된다
+	 */
+	hset({ key, field, value }) {
+		return Rclient.hset(key, field, value);
 	}
 
 	/**

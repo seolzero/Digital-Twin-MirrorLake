@@ -22,7 +22,7 @@ class DO {
 		}
 
 		// redis의 "DO" list에 새로 생길 DO의 이름 추가
-		await model.redis.pushDO({ name });
+		await model.redis.rpush({ key: "DO", name });
 
 		// redis에 key:value 데이터 생성
 		const obj = {
