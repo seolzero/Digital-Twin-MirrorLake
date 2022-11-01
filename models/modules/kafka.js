@@ -64,11 +64,13 @@ class Kafka {
       let splitURLsink = url.split(":");
       switch (splitURLsink[0]) {
          case "http":
-            sinkConnectorBody = await SimulationHttpSinkConnector(resObject);
+            sinkConnectorBody = await this.SimulationHttpSinkConnector(
+               resObject
+            );
             console.log("http sink");
             break;
          case "mqtt":
-            sinkConnectorBody = await SimulationMQTTSinkConnector(
+            sinkConnectorBody = await this.SimulationMQTTSinkConnector(
                resObject,
                splitURLsink
             );
@@ -111,7 +113,7 @@ class Kafka {
       let DO_DOs = DOs.map((d) => "DO_" + d);
       console.log("DO_DOs: ", DO_DOs);
       let topics = "";
-      for (i in DO_DOs) {
+      for (let i in DO_DOs) {
          topics += DO_DOs[i];
          if (i != DO_DOs.length - 1) {
             topics += ",";
