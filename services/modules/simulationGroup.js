@@ -109,6 +109,18 @@ class simulationGroup {
    }
 
    /**
+    * 저장된 모든 simulation의 이름 조회
+    * @returns {List}
+    */
+   async getAll() {
+      const model = new Model();
+      let simulationNameEntireList = await model.redis.getNameList(
+         "simulation"
+      );
+
+      return simulationNameEntireList;
+   }
+   /**
     *  simulation 삭제
     * @param {string} name
     * @returns {Json}

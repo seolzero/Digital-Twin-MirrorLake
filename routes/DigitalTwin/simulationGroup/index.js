@@ -74,6 +74,23 @@ router.get("/", async (req, res) => {
    }
 });
 
+/*
+ * simulation Entire Retrieve
+ */
+router.get("/all", async function (req, res) {
+   try {
+      const result = await services.simulation.getAll();
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Retrieve /DigitalTwin/simulationGroup/all`);
+   }
+});
+
 /**
  * simulation delete
  * localhost:1005/DigitalTwin/simulationGroup?name=SIcrain

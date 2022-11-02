@@ -121,6 +121,17 @@ class serviceGroup {
    }
 
    /**
+    * 저장된 모든 이름 조회
+    * @returns {List}
+    */
+   async getAll() {
+      const model = new Model();
+      let serviceNameEntireList = await model.redis.getNameList("service");
+
+      return serviceNameEntireList;
+   }
+
+   /**
     *  service 삭제
     * @param {string} name
     * @returns {Json}

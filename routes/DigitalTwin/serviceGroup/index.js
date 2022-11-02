@@ -3,10 +3,7 @@ const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
 const ErrorHandler = require("../../../lib/error-handler");
-// kafka 설정 불러오기
-const config = require("../../../config");
 const services = require("../../../services");
-const kafka = config.kafka.host;
 
 /**
  * service Creation
@@ -87,6 +84,23 @@ router.get("/", async (req, res) => {
          e = new ErrorHandler(500, 500, "Internal Server Error");
       }
       e.handle(req, res, `Retrieve /DigitalTwin/serviceGroup`);
+   }
+});
+
+/*
+ * service Entire Retrieve
+ */
+router.get("/all", async function (req, res) {
+   try {
+      const result = await services.service.getAll();
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Retrieve /DigitalTwin/serviceGroup/all`);
    }
 });
 
