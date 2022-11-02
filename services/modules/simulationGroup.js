@@ -22,6 +22,7 @@ class simulationGroup {
       // redis의 "simulation" list에 새로 생길 simulation의 이름 추가
       await model.redis.rpush({ key: "simulation", name });
       // redis의 hmap set에 simulation 정보 추가
+      /*
       await model.redis.hset({
          key: `simulation_${name}`,
          field: "name",
@@ -36,9 +37,20 @@ class simulationGroup {
          key: `simulation_${name}`,
          field: "url",
          value: url,
-      });
+      });*/
 
-      return { success: 1 };
+      const requestArr = [];
+      for (let key in arguments[0]) {
+         let value = arguments[0][key];
+         if (key == "arg") {
+            value = JSON.stringify(arguments[0][key]);
+         }
+         requestArr.push({ key: `simulation_${name}`, field: key, value });
+      }
+      const result = await Promise.all(
+         requestArr.map((index) => model.reids.hset(index))
+      );
+      return { success: result };
    }
 
    /**
@@ -58,8 +70,7 @@ class simulationGroup {
       if (!isExistName) {
          throw new ErrorHandler(412, 5252, "Unregistered simulation");
       }
-
-      // redis의 hmap set에 simulation 정보 추가
+      /*
       await model.redis.hset({
          key: `simulation_${name}`,
          field: "name",
@@ -74,9 +85,20 @@ class simulationGroup {
          key: `simulation_${name}`,
          field: "url",
          value: url,
-      });
+      });*/
 
-      return { success: 1 };
+      const requestArr = [];
+      for (let key in arguments[0]) {
+         let value = arguments[0][key];
+         if (key == "arg") {
+            value = JSON.stringify(arguments[0][key]);
+         }
+         requestArr.push({ key: `simulation_${name}`, field: key, value });
+      }
+      const result = await Promise.all(
+         requestArr.map((index) => model.reids.hset(index))
+      );
+      return { success: result };
    }
 
    /**
