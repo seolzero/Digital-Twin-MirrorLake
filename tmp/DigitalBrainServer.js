@@ -717,6 +717,7 @@ app.delete("/DigitalTwin/simulationGroup/all", async (req, res) => {
 
    res.send(NameList);
 });
+
 /*
  * simulation Trigger
  * RT: RealTime

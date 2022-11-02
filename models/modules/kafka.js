@@ -57,6 +57,10 @@ class Kafka {
       request.end();
    }
 
+   /**
+    * CreateSinkConnector => service, simulation
+    * MQTT, HTTP
+    */
    async CreateSimulationSinkConnector(resObject) {
       let sinkConnectorBody;
       const { name, url, arg } = { ...resObject };
@@ -108,7 +112,7 @@ class Kafka {
    }
 
    async SimulationHttpSinkConnector(resObject) {
-      const DOs = Object.keys(resObject.arg); //[ 'DO1', 'DO2' ]
+      const DOs = Object.keys(resObject.arg);
       console.log("DOs: ", DOs);
       let DO_DOs = DOs.map((d) => "DO_" + d);
       console.log("DO_DOs: ", DO_DOs);
@@ -126,7 +130,6 @@ class Kafka {
          config: {
             "connector.class": "uk.co.threefi.connect.http.HttpSinkConnector",
             "tasks.max": "1",
-            "request.method": "",
             headers: "Content-Type:application/json|Accept:application/json",
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
             "value.converter":
@@ -135,7 +138,8 @@ class Kafka {
             "request.method": "POST",
             topics: topics,
             "response.topic": `SIM_${resObject.name}`,
-            "kafka.api.url": `${config.kafkaHost}`,
+            "kafka.api.url": `${config.kafka.host}`,
+            "batch.max.size": 512,
          },
       };
 
@@ -147,7 +151,7 @@ class Kafka {
       let DO_DOs = DOs.map((d) => "DO_" + d);
 
       let topics = "";
-      for (i in DO_DOs) {
+      for (let i in DO_DOs) {
          topics += DO_DOs[i];
          if (i != DO_DOs.length - 1) {
             topics += ",";
@@ -155,7 +159,7 @@ class Kafka {
       }
       console.log(topics);
       let SQL = "";
-      for (i in DO_DOs) {
+      for (let i in DO_DOs) {
          SQL += `INSERT INTO /mqtt/data SELECT * FROM ${DO_DOs[i]};`;
       }
       let sinkConnectorBody = {
@@ -180,27 +184,25 @@ class Kafka {
       return sinkConnectorBody;
    }
 
-   /**
-    * CreateSinkConnector => service, simulation
-    * MQTT, HTTP
-    */
-
    async CreateServiceSinkConnector(resObject) {
       let sinkConnectorBody;
       const { name, url, DO_arg, SIM_arg } = { ...resObject };
-      console.log("resObject", resObject);
+      //console.log("resObject: ", resObject);
       let splitURLsink = url.split(":");
       switch (splitURLsink[0]) {
          case "http":
-            sinkConnectorBody = await ServiceHttpSinkConnector(resObject);
             console.log("http sink");
+            sinkConnectorBody = await this.ServiceHttpSinkConnector(resObject);
+
             break;
          case "mqtt":
-            sinkConnectorBody = await ServiceMQTTSinkConnector(
+            console.log("mqtt sink");
+            console.log("resObject: ", resObject);
+            sinkConnectorBody = await this.ServiceMQTTSinkConnector(
                resObject,
                splitURLsink
             );
-            console.log("mqtt sink");
+
             break;
          default:
             console.log(`out of ${splitURLsink[0]}`);
@@ -233,48 +235,61 @@ class Kafka {
       request.end();
    }
 
-   ServiceHttpSinkConnector(resObject) {
-      let topicArg = resObject.arg;
+   async ServiceHttpSinkConnector(resObject) {
+      console.log(resObject);
+      const DOs = Object.keys(JSON.parse(resObject.DO_arg)); //[ 'DO1', 'DO2' ]
+      const SIMs = Object.keys(JSON.parse(resObject.SIM_arg));
+      console.log(DOs, SIMs);
       let topics = "";
-      for (i in topicArg) {
-         topics += topicArg[i];
-         if (i != topicArg.length - 1) {
-            topics += ",";
+      if (SIMs.length > 0) {
+         let SIM_SIMs = SIMs.map((s) => "SIM_" + s);
+         for (let i in SIM_SIMs) {
+            topics += SIM_SIMs[i];
+            if (i != SIM_SIMs.length - 1) {
+               topics += ",";
+            }
+         }
+      } else {
+         let DO_s = DOs.map((s) => "DO_" + s);
+         for (let i in DO_s) {
+            topics += DO_s[i];
+            if (i != DO_s.length - 1) {
+               topics += ",";
+            }
          }
       }
-      //console.log(topics);
 
       let sinkConnectorBody = {
          name: resObject.name,
          config: {
-            "connector.class": "uk.co.threefi.connect.http.HttpSinkConnector",
+            "connector.class":
+               "uk.co.threefi.connect.http.service.HttpSinkConnector",
             "tasks.max": "1",
-            "request.method": "",
             headers: "Content-Type:application/json|Accept:application/json",
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
             "value.converter":
                "org.apache.kafka.connect.storage.StringConverter",
             "http.api.url": resObject.url,
+            "kafka.api.url": `${config.kafka.host}`,
             "request.method": "POST",
             topics: topics,
-            "response.topic": `Service_${resObject.name}`,
-            "kafka.api.url": `${config.kafkaHost}`,
          },
       };
 
       return sinkConnectorBody;
    }
 
-   ServiceMQTTSinkConnector({ resObject, splitURLsink }) {
-      const DOs = Object.keys(resObject.DO_arg); //[ 'DO1', 'DO2' ]
-      const SIMs = Object.keys(resObject.SIM_arg);
+   async ServiceMQTTSinkConnector({ resObject, splitURLsink }) {
+      console.log(resObject);
+      const DOs = Object.keys(JSON.parse(resObject.DO_arg)); //[ 'DO1', 'DO2' ]
+      const SIMs = Object.keys(JSON.parse(resObject.SIM_arg));
       let DO_DOs = DOs.map((d) => "DO_" + d);
       let SIM_SIMs = SIMs.map((s) => "SIM_" + s);
       let DO_SIM_arr = DO_DOs.concat(SIM_SIMs);
       //console.log(DO_SIM_arr);
 
       let topics = "";
-      for (i in DO_SIM_arr) {
+      for (let i in DO_SIM_arr) {
          topics += DO_SIM_arr[i];
          if (i != DO_SIM_arr.length - 1) {
             topics += ",";
@@ -283,11 +298,11 @@ class Kafka {
       //console.log(topics);
 
       let SQL = "";
-      for (i in DO_DOs) {
+      for (let i in DO_DOs) {
          SQL += `INSERT INTO /mqtt/data SELECT * FROM ${DO_DOs[i]};`;
       }
 
-      for (i in SIM_SIMs) {
+      for (let i in SIM_SIMs) {
          SQL += `INSERT INTO /mqtt/simulation SELECT * FROM ${SIM_SIMs[i]};`;
       }
 

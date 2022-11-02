@@ -9,7 +9,7 @@ const dirs = fs
    .filter((d) => fs.lstatSync(__dirname + "/" + d).isDirectory());
 console.log(dirs);
 dirs.forEach((dir) => {
-   if (["DO", "flink", "simulationGroup"].includes(dir)) {
+   if (["DO", "flink", "simulationGroup", "serviceGroup"].includes(dir)) {
       const r = require("./" + dir);
       router.use("/" + dir, r);
       console.log("\t/" + dir);
