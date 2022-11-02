@@ -2,198 +2,155 @@ const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
-const service = require("../../../services");
 const ErrorHandler = require("../../../lib/error-handler");
 // kafka 설정 불러오기
 const config = require("../../../config");
+const services = require("../../../services");
 const kafka = config.kafka.host;
 
-/*
+/**
  * service Creation
+ * localhost:1005/DigitalTwin/serviceGroup
+ * @body {String} name (required)
+ * @body {Json} DO_arg (required)
+ * @body {Json} SIM_arg (required)
+ * @body {String} url (required)
+ * @returns {Json} {}
  */
-router.post("/", function (req, res) {
-   let fullBody = "",
-      DataObject = "";
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
+router.post("/", async function (req, res) {
+   try {
+      const { name, DO_arg, SIM_arg, url } = req.body;
 
-   req.on("end", async function () {
-      if (tryJSONparse(fullBody)) {
-         DataObject = tryJSONparse(fullBody);
-         if (DataObject?.name && DataObject?.url) {
-            const flag = await checkNameExist(DataObject.name, "service").then(
-               function (flag) {
-                  return flag;
-               }
-            );
-            if (flag) {
-               res.status(500).send("is already exist");
-            } else {
-               const service = DataObject.name;
-               Rclient.rpush("service", service);
-               const sensorFields = Object.keys(DataObject);
-               for (var i = 0; i < sensorFields.length; i++) {
-                  const field = sensorFields[i];
-                  Rclient.hset(
-                     `service_${DataObject.name}`,
-                     sensorFields[i],
-                     JSON.stringify(DataObject[field])
-                  );
-               }
-               res.status(200).send("successfully registered");
-            }
-         } else {
-            res.status(500).send("please check mandatory field");
-         }
-      } else {
-         res.status(500).send("is not a json structure");
-      }
-   });
-});
-
-/*
- * service Update
- */
-router.put("/", function (req, res) {
-   let fullBody = "",
-      DataObject = "";
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
-
-   req.on("end", async function () {
-      if (tryJSONparse(fullBody)) {
-         DataObject = tryJSONparse(fullBody);
-         if (DataObject?.name && DataObject?.url) {
-            const flag = await checkNameExist(DataObject.name, "service").then(
-               function (flag) {
-                  return flag;
-               }
-            );
-            if (!flag) {
-               res.status(500).send("Unregistered service");
-            } else {
-               const service = DataObject.name;
-               const sensorFields = Object.keys(DataObject);
-               for (var i = 0; i < sensorFields.length; i++) {
-                  const field = sensorFields[i];
-                  Rclient.hset(
-                     `service_${DataObject.name}`,
-                     sensorFields[i],
-                     JSON.stringify(DataObject[field])
-                  );
-               }
-               res.status(200).send("successfully update");
-            }
-         } else {
-            res.status(500).send("please check mandatory field");
-         }
-      } else {
-         res.status(500).send("is not a json structure");
-      }
-   });
-});
-
-/*
- * service Retrieve
- */
-router.get("/:serviceName", async (req, res) => {
-   if (req.params.serviceName) {
-      let serviceName = req.params.serviceName;
-      const flag = await checkNameExist(serviceName, "service").then(function (
-         flag
-      ) {
-         return flag;
+      const result = await services.service.create({
+         name,
+         DO_arg,
+         SIM_arg,
+         url,
       });
-      if (flag) {
-         const keys = await getKeys(`service_${req.params.serviceName}`).then(
-            function (keys) {
-               return keys;
-            }
-         );
 
-         let resObject = {};
-         for (let key of keys) {
-            const value = await getValue(
-               `service_${req.params.serviceName}`,
-               key
-            );
-            resObject[key] = value;
-         }
-         res.status(200).send(resObject);
-      } else {
-         res.status(200).send("Unregistered service");
+      res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   } else {
-      res.status(404).send("Bad Request");
-      console.log("input value error");
+      e.handle(req, res, `POST /DigitalTwin/serviceGroup ${e}`);
+   }
+});
+
+/**
+ * service Update
+ * localhost:1005/DigitalTwin/serviceGroup
+ * @body {String} name (required)
+ * @body {Json} DO_arg (required)
+ * @body {Json} SIM_arg (required)
+ * @body {String} url (required)
+ * @returns {Json} {}
+ */
+router.put("/", async function (req, res) {
+   try {
+      const { name, DO_arg, SIM_arg, url } = req.body;
+
+      const result = await services.service.update({
+         name,
+         DO_arg,
+         SIM_arg,
+         url,
+      });
+
+      res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, "POST /DigitalTwin/serviceGroup");
+   }
+});
+
+/**
+ * service Retrieve
+ * localhost:1005/DigitalTwin/serviceGroup?name=SEcrain
+ * @param {string} name (required)
+ * @returns {Json} {}
+ */
+router.get("/", async (req, res) => {
+   const { name } = req.query;
+
+   try {
+      const result = await services.service.get({ name });
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Retrieve /DigitalTwin/serviceGroup`);
    }
 });
 
 /*
  * service delete
+ * localhost:1005/DigitalTwin/serviceGroup?name=SEcrain
+ * @param {string} name (required)
+ * @returns {Json} {}
  */
-router.delete("/:serviceName", async (req, res) => {
-   if (req.params.serviceName) {
-      let serviceName = req.params.serviceName;
-      const flag = await checkNameExist(serviceName, "service").then(function (
-         flag
-      ) {
-         return flag;
-      });
-      if (flag) {
-         Rclient.DEL(`service_${req.params.serviceName}`);
-         Rclient.LREM("service", -1, req.params.serviceName);
-         deleteSink(req.params.serviceName);
-         res.send({ success: 1 });
-      } else {
-         res.status(200).send("Unregistered service");
+router.delete("/", async (req, res) => {
+   const { name } = req.query;
+
+   try {
+      const result = await services.service.delete({ name });
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   } else {
-      res.status(404).send("Bad Request");
-      console.log("input value error");
+      e.handle(req, res, `Delete /DigitalTwin/serviceGroup`);
+   }
+});
+
+/**
+ * service all delete
+ * localhost:1005/DigitalTwin/serviceGroup/all
+ * @returns {Json} {}
+ */
+router.delete("/all", async (req, res) => {
+   try {
+      const result = await services.service.allDelete();
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Delete /DigitalTwin/serviceGroup/all`);
    }
 });
 
 /*
- * service Trigger
+ * service trigger
+ * localhost:1005/DigitalTwin/serviceGroup/trigger?name=SEcrain
+ * @param {string} name (required)
+ * @returns {Json} {}
  */
-router.post("/trigger/:serviceName", function (req, res) {
-   let fullBody = "",
-      serviceName = "",
-      resObject = {};
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
+router.post("/trigger", async function (req, res) {
+   const { name } = req.query;
 
-   req.on("end", async function () {
-      if (req.params.serviceName) {
-         serviceName = req.params.serviceName;
-         const flag = await checkNameExist(serviceName, "service").then(
-            function (flag) {
-               return flag;
-            }
-         );
-         if (flag) {
-            const keys = await getKeys(`service_${serviceName}`).then(function (
-               keys
-            ) {
-               return keys;
-            });
-            for (let key of keys) {
-               const value = await getValue(`service_${serviceName}`, key);
-               resObject[key] = value;
-            }
-            CreateServiceSinkConnector(resObject);
-            res.status(200).send(resObject);
-         } else {
-            res.status(412).send("Unregistered service");
-         }
-      } else {
-         res.status(500).send("please check serviceName parameter");
+   try {
+      const result = await services.service.trigger({ name });
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   });
+      e.handle(req, res, `POST /DigitalTwin/serviceGroup/trigger`);
+   }
 });
 
 module.exports = router;
