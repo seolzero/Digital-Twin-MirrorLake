@@ -270,7 +270,6 @@ class Kafka {
             "value.converter":
                "org.apache.kafka.connect.storage.StringConverter",
             "http.api.url": resObject.url,
-            "kafka.api.url": `${config.kafka.host}`,
             "request.method": "POST",
             topics: topics,
          },
