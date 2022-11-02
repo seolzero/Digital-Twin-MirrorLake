@@ -197,7 +197,6 @@ class Kafka {
             break;
          case "mqtt":
             console.log("mqtt sink");
-            console.log("resObject: ", resObject);
             sinkConnectorBody = await this.ServiceMQTTSinkConnector({
                resObject,
                splitURLsink,
@@ -279,7 +278,6 @@ class Kafka {
    }
 
    async ServiceMQTTSinkConnector({ resObject, splitURLsink }) {
-      console.log(resObject);
       const DOs = Object.keys(JSON.parse(resObject.DO_arg)); //[ 'DO1', 'DO2' ]
       const SIMs = Object.keys(JSON.parse(resObject.SIM_arg));
       let DO_DOs = DOs.map((d) => "DO_" + d);
