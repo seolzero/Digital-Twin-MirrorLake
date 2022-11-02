@@ -2,10 +2,11 @@ const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
-const service = require("../../../services");
+const services = require("../../../services");
 const ErrorHandler = require("../../../lib/error-handler");
 /**
  * simulation Creation
+ * localhost:1005/DigitalTwin/simulationGroup
  * @body {String} name (required)
  * @body {Json} arg (required)
  * @body {String} url (required)
@@ -15,7 +16,7 @@ router.post("/", async function (req, res) {
    try {
       const { name, arg, url } = req.body;
 
-      const result = await service.simulation.create({ name, arg, url });
+      const result = await services.simulation.create({ name, arg, url });
 
       res.success(201, result);
    } catch (e) {
@@ -29,6 +30,7 @@ router.post("/", async function (req, res) {
 
 /**
  * simulation Update
+ * localhost:1005/DigitalTwin/simulationGroup
  * @body {String} name (required)
  * @body {Json} arg (required)
  * @body {String} url (required)
@@ -38,7 +40,7 @@ router.put("/", async function (req, res) {
    try {
       const { name, arg, url } = req.body;
 
-      const result = await service.simulation.update({ name, arg, url });
+      const result = await services.simulation.update({ name, arg, url });
 
       res.success(201, result);
    } catch (e) {
@@ -60,7 +62,7 @@ router.get("/", async (req, res) => {
    const { name } = req.query;
 
    try {
-      const result = await service.simulation.get({ name });
+      const result = await services.simulation.get({ name });
 
       res.success(200, result);
    } catch (e) {
@@ -82,7 +84,7 @@ router.delete("/", async (req, res) => {
    const { name } = req.query;
 
    try {
-      const result = await service.simulation.delete({ name });
+      const result = await services.simulation.delete({ name });
 
       res.success(200, result);
    } catch (e) {
@@ -91,6 +93,25 @@ router.delete("/", async (req, res) => {
          e = new ErrorHandler(500, 500, "Internal Server Error");
       }
       e.handle(req, res, `Delete /DigitalTwin/simulationGroup`);
+   }
+});
+
+/**
+ * simulation all delete
+ * localhost:1005/DigitalTwin/simulationGroup/all
+ * @returns {Json} {}
+ */
+router.delete("/all", async (req, res) => {
+   try {
+      const result = await services.simulation.allDelete();
+
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Delete /DigitalTwin/simulationGroup/all`);
    }
 });
 
@@ -104,7 +125,7 @@ router.post("/RTtrigger", async function (req, res) {
    const { name } = req.query;
 
    try {
-      const result = await service.simulation.rtTrigger({ name });
+      const result = await services.simulation.rtTrigger({ name });
 
       res.success(200, result);
    } catch (e) {
@@ -126,7 +147,7 @@ router.post("/STtrigger", async function (req, res) {
    const { name } = req.query;
 
    try {
-      const result = await service.simulation.stTrigger({ name });
+      const result = await services.simulation.stTrigger({ name });
       res.success(200, result);
    } catch (e) {
       if (!(e instanceof ErrorHandler)) {

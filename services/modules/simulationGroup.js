@@ -4,7 +4,7 @@ class simulationGroup {
    /**
     * simulation create
     * @param {String} name (required)
-    * @param {String} arg (required)
+    * @param {Json} arg (required)
     * @param {String} url (required)
     * @returns {Boolean} true
     */
@@ -44,7 +44,7 @@ class simulationGroup {
    /**
     * simulation update
     * @param {String} name (required)
-    * @param {String} arg (required)
+    * @param {Json} arg (required)
     * @param {String} url (required)
     * @returns {Boolean} true
     */
@@ -130,6 +130,29 @@ class simulationGroup {
       } else {
          return "Unregistered simulation";
       }
+   }
+
+   /**
+    *  simulation 모두 삭제
+    * @returns {Json}
+    */
+   async allDelete() {
+      const model = new Model();
+
+      await model.redis.delete({ name: "simulation" });
+      let NameList = await model.redis
+         .getNameList("simulation")
+         .then((List) => {
+            return List;
+         });
+      new Promise((resolve, reject) => {
+         for (i in NameList) {
+            model.redis.delete({ name: i });
+         }
+         resolve(NameList);
+      });
+
+      return { delete: NameList };
    }
 
    /**
