@@ -198,10 +198,10 @@ class Kafka {
          case "mqtt":
             console.log("mqtt sink");
             console.log("resObject: ", resObject);
-            sinkConnectorBody = await this.ServiceMQTTSinkConnector(
+            sinkConnectorBody = await this.ServiceMQTTSinkConnector({
                resObject,
-               splitURLsink
-            );
+               splitURLsink,
+            });
 
             break;
          default:
