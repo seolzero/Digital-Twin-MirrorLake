@@ -136,6 +136,17 @@ class Redis {
 
       return flag;
    }
+
+   async getListLength_delete() {
+      return Rclient.lrange("sensor", 0, -1, function (err, keys) {
+         if (err) throw err;
+         keys.forEach((key) => {
+            Rclient.DEL(key);
+         });
+
+         return keys.length;
+      });
+   }
 }
 
 module.exports = Redis;

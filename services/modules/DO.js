@@ -98,7 +98,9 @@ class DO {
       await model.redis.set({ name, obj });
 
       // flink DO 테이블 수정
-      await model.flink.updateDOTable({ obj });
+      // flink table 삭제 후 재 생성 필요
+      await model.flink.dropTable({ name });
+      await model.flink.createDOTable({ obj });
 
       return obj;
    }
