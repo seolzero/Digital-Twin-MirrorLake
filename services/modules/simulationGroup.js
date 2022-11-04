@@ -22,23 +22,6 @@ class simulationGroup {
       // redis의 "simulation" list에 새로 생길 simulation의 이름 추가
       await model.redis.rpush({ key: "simulation", name });
       // redis의 hmap set에 simulation 정보 추가
-      /*
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "name",
-         value: name,
-      });
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "arg",
-         value: JSON.stringify(arg),
-      });
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "url",
-         value: url,
-      });*/
-
       const requestArr = [];
       for (let key in arguments[0]) {
          let value = arguments[0][key];
@@ -70,22 +53,6 @@ class simulationGroup {
       if (!isExistName) {
          throw new ErrorHandler(412, 5252, "Unregistered simulation");
       }
-      /*
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "name",
-         value: name,
-      });
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "arg",
-         value: JSON.stringify(arg),
-      });
-      await model.redis.hset({
-         key: `simulation_${name}`,
-         field: "url",
-         value: url,
-      });*/
 
       const requestArr = [];
       for (let key in arguments[0]) {

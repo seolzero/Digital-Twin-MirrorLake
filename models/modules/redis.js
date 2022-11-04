@@ -137,15 +137,19 @@ class Redis {
       return flag;
    }
 
-   async getListLength_delete() {
-      return Rclient.lrange("sensor", 0, -1, function (err, keys) {
-         if (err) throw err;
-         keys.forEach((key) => {
-            Rclient.DEL(key);
+   async getListLength_delete({ key }) {
+      const keys = new Promise((resolve, reject) => {
+         Rclient.lrange(key, 0, -1, (err, keys) => {
+            if (err) {
+               reject(err);
+            }
+            keys.forEach((key) => {
+               Rclient.DEL(key);
+            });
+            resolve(keys);
          });
-
-         return keys.length;
       });
+      return keys;
    }
 }
 

@@ -55,6 +55,8 @@ class Kafka {
          }
       );
       request.end();
+
+      return 0;
    }
 
    /**
@@ -109,6 +111,8 @@ class Kafka {
       );
       request.write(JSON.stringify(sinkConnectorBody));
       request.end();
+
+      return 0;
    }
 
    async SimulationHttpSinkConnector(resObject) {
@@ -232,6 +236,8 @@ class Kafka {
       );
       request.write(JSON.stringify(sinkConnectorBody));
       request.end();
+
+      return 0;
    }
 
    async ServiceHttpSinkConnector(resObject) {

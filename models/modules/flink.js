@@ -40,6 +40,8 @@ class Flink {
       } catch (e) {
          console.log(e.response.data);
       }
+
+      return 0;
    }
 
    /**
@@ -107,6 +109,7 @@ class Flink {
 
       const insertData = await this.#request({ bodyParams: insertTableSQL });
       console.log(insertData.results);
+      return 0;
    }
 
    async dropTable({ name }) {
@@ -114,8 +117,9 @@ class Flink {
       let dropStreamSQL = {
          statement: `drop table ${name}`,
       };
-      const dropTable = await this.#request({ bodyParams: dropStreamSQL });
-      console.log(dropTable.results);
+      const result = await this.#request({ bodyParams: dropStreamSQL });
+      console.log(dropStreamSQL, result);
+      return 0;
    }
 }
 

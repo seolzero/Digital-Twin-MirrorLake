@@ -117,7 +117,7 @@ class DO {
       if (isExistName) {
          await model.redis.delete({ name });
          await model.redis.removeFromList({ name, key: "DO" });
-
+         await model.flink.dropTable({ name });
          return { delete: name };
       } else {
          return "Unregistered DO";
@@ -131,9 +131,14 @@ class DO {
    async deleteAll() {
       const model = new Model();
 
-      const result = await model.redis.delete({ name: "DO" });
+      await model.redis.delete({ name: "DO" });
+      const keys = await model.redis.getListLength_delete({ key: "DO" });
+      keys.forEach(async (key) => {
+         Rclient.DEL(key);
+         await model.flink.dropTable({ name: key });
+      });
 
-      return { delete: result };
+      return { delete: keys.length };
    }
 
    /**

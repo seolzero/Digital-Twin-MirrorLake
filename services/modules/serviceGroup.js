@@ -23,26 +23,36 @@ class serviceGroup {
       // redis의 "service" list에 새로 생길 service의 이름 추가
       await model.redis.rpush({ key: "service", name });
       // redis의 hmap set에 service 정보 추가
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "name",
-         value: name,
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "DO_arg",
-         value: JSON.stringify(DO_arg),
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "SIM_arg",
-         value: JSON.stringify(SIM_arg),
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "url",
-         value: url,
-      });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "name",
+      //    value: name,
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "DO_arg",
+      //    value: JSON.stringify(DO_arg),
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "SIM_arg",
+      //    value: JSON.stringify(SIM_arg),
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "url",
+      //    value: url,
+      // });
+
+      const requestArr = [];
+      for (let key in arguments[0]) {
+         let value = arguments[0][key];
+         if (key == "DO_arg" || key == "SIM_arg") {
+            value = JSON.stringify(arguments[0][key]);
+         }
+         requestArr.push({ key: `service_${name}`, field: key, value });
+      }
+      await Promise.all(requestArr.map((index) => model.reids.hset(index)));
 
       return { success: 1 };
    }
@@ -67,26 +77,36 @@ class serviceGroup {
       }
 
       // redis의 hmap set에 service 정보 추가
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "name",
-         value: name,
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "DO_arg",
-         value: JSON.stringify(DO_arg),
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "SIM_arg",
-         value: JSON.stringify(SIM_arg),
-      });
-      await model.redis.hset({
-         key: `service_${name}`,
-         field: "url",
-         value: url,
-      });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "name",
+      //    value: name,
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "DO_arg",
+      //    value: JSON.stringify(DO_arg),
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "SIM_arg",
+      //    value: JSON.stringify(SIM_arg),
+      // });
+      // await model.redis.hset({
+      //    key: `service_${name}`,
+      //    field: "url",
+      //    value: url,
+      // });
+
+      const requestArr = [];
+      for (let key in arguments[0]) {
+         let value = arguments[0][key];
+         if (key == "DO_arg" || key == "SIM_arg") {
+            value = JSON.stringify(arguments[0][key]);
+         }
+         requestArr.push({ key: `service_${name}`, field: key, value });
+      }
+      await Promise.all(requestArr.map((index) => model.reids.hset(index)));
 
       return { success: 1 };
    }
