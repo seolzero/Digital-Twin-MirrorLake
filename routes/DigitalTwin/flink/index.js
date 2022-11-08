@@ -7,10 +7,10 @@ const router = asyncify(express.Router());
  * 이 서버(Digital Brain)로 sessionId를 공유해줌
  */
 router.post("/:sessionId", (req, res) => {
-	global.SESSION_ID = req.params.sessionId;
-	console.log("sessionID: ", global.SESSION_ID);
+   global.SESSION_ID = req.params.sessionId;
+   console.log("sessionID: ", global.SESSION_ID);
 
-	res.success();
+   res.success();
 });
 
 module.exports = router;
