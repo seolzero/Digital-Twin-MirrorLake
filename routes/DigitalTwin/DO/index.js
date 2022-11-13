@@ -12,19 +12,19 @@ const ErrorHandler = require("../../../lib/error-handler");
  * @returns {Json} {}
  */
 router.post("/", async function (req, res) {
-   try {
-      const { name, sensor } = req.body;
+	try {
+		const { name, sensor } = req.body;
 
-      const result = await services.do.create({ name, sensor });
+		const result = await services.do.create({ name, sensor });
 
-      res.success(201, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, "POST /DigitalTwin/DO");
-   }
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, "POST /DigitalTwin/DO");
+	}
 });
 
 /*
@@ -32,35 +32,35 @@ router.post("/", async function (req, res) {
  * localhost:1005/DigitalTwin/DO?name=DOcrain26
  */
 router.get("/", async (req, res) => {
-   const { name } = req.query;
-   try {
-      const result = await services.do.get({ name });
+	const { name } = req.query;
+	try {
+		const result = await services.do.get({ name });
 
-      res.success(200, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, `Retrieve /DigitalTwin/DO`);
-   }
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO`);
+	}
 });
 
 /*
  * DO Entire Retrieve
  */
 router.get("/all", async function (req, res) {
-   try {
-      const result = await services.do.getAll();
+	try {
+		const result = await services.do.getAll();
 
-      res.success(200, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
-   }
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
+	}
 });
 
 /*
@@ -68,35 +68,35 @@ router.get("/all", async function (req, res) {
  * localhost:1005/DigitalTwin/DO?name=DOcrain26
  */
 router.delete("/", async (req, res) => {
-   const { name } = req.query;
-   try {
-      const result = await services.do.delete({ name });
+	const { name } = req.query;
+	try {
+		const result = await services.do.delete({ name });
 
-      res.success(200, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
-   }
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
+	}
 });
 
 /*
  * DO Entire Delete
  */
 router.delete("/all", async function (req, res) {
-   try {
-      const result = await services.do.deleteAll();
+	try {
+		const result = await services.do.deleteAll();
 
-      res.success(200, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
-   }
+		res.success(200, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, `Retrieve /DigitalTwin/DO/all`);
+	}
 });
 
 /*
@@ -109,19 +109,21 @@ ain26','properties.bootstrap.servers' = 'localhost:9092', 'key.format' = 'json',
  * org.apache.flink.table.api.ValidationException: Unsupported options found for connector 'upsert-kafka'.
  */
 router.put("/", async (req, res) => {
-   try {
-      const { name, sensor } = req.body;
+	try {
+		const { name, sensor } = req.body;
 
-      const result = await services.do.update({ name, sensor });
+		const result = await services.do.update({ name, sensor });
 
-      res.success(201, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, "UPDATE /DigitalTwin/DO");
-   }
+		res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, "UPDATE /DigitalTwin/DO");
+	}
 });
+
+router.use("/control", require("./control"));
 
 module.exports = router;

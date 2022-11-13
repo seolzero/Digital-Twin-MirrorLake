@@ -238,3 +238,26 @@ router.get("/:DOName/:controlName", async function (req, res) {
 		res.status(404).send("DO does not exist");
 	}
 });
+
+/**
+ * control Creation
+ * @body {String} name (required)
+ * @body {String Array} sensor (required)
+ * @returns {Json} {}
+ */
+router.post("/", async function (req, res) {
+	try {
+		//const { name, sensor } = req.body;
+		console.log(req.body);
+		//const result = await services.do.create({ name, sensor });
+		res.end();
+		//res.success(201, result);
+	} catch (e) {
+		if (!(e instanceof ErrorHandler)) {
+			console.log(e);
+			e = new ErrorHandler(500, 500, "Internal Server Error");
+		}
+		e.handle(req, res, "POST /DigitalTwin/DO/control");
+	}
+});
+module.exports = router;
