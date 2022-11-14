@@ -39,6 +39,6 @@ exports.postgres = {
       port: 5432,
       user: "postgres",
       password: "keti123",
-      database: "postgres",
+      database: "mirrorlake",
    },
 };
