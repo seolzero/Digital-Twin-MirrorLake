@@ -1,6 +1,7 @@
 const Flink = require("./modules/flink");
 const Redis = require("./modules/redis");
 const Kafka = require("./modules/kafka");
+const Postgres = require("./modules/postgres");
 
 class Models {
    #getInstance(_class) {
@@ -24,6 +25,9 @@ class Models {
 
    get kafka() {
       return this.#getInstance(Kafka);
+   }
+   get Postgres() {
+      return this.#getInstance(Postgres);
    }
 }
 

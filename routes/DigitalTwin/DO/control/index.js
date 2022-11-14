@@ -2,9 +2,39 @@ const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
 
-/*
- *
+/**
+ * control Creation
+ * @params {String} DOname
+ * @body {String} name,controlCreator, controlDestinationType, controlDestination (required)
+ * @returns {Json} {}
+ * localhost:1005/DigitalTwin/DO/control?DO=DOname
  */
+router.post("/", async function (req, res) {
+   try {
+      const { DO } = req.query;
+      const {
+         name,
+         controlCreator,
+         controlDestinationType,
+         controlDestination,
+      } = req.body;
+      const result = await services.control.create({
+         DO,
+         name,
+         controlCreator,
+         controlDestinationType,
+         controlDestination,
+      });
+      res.end();
+      //res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, "POST /DigitalTwin/DO/control");
+   }
+});
 
 /**
  * control Creation
@@ -312,25 +342,4 @@ router.get("/:DOName/:controlName", async function (req, res) {
    }
 });
 
-/**
- * control Creation
- * @body {String} name (required)
- * @body {String Array} sensor (required)
- * @returns {Json} {}
- */
-router.post("/", async function (req, res) {
-   try {
-      //const { name, sensor } = req.body;
-      console.log(req.body);
-      //const result = await services.do.create({ name, sensor });
-      res.end();
-      //res.success(201, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, "POST /DigitalTwin/DO/control");
-   }
-});
 module.exports = router;
