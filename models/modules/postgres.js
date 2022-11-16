@@ -1,48 +1,49 @@
 class Postgres {
-   async createTable({ sql }) {
-      pgClient
+   async sendQuery({ sql }) {
+      return pgClient
          .query(sql)
          .then((res) => {
             console.log(sql);
-            console.log("res: ", res.command);
+            return res.command;
          })
          .catch((e) => {
-            console.log(e.stack);
+            throw e;
          });
-
-      return 0;
    }
 
-   selectData() {
-      let sql = ``;
-      pgClient
+   async selectData({ sql }) {
+      return pgClient
          .query(sql)
          .then((response) => {
             console.log(sql);
-            //console.log(response)
             if (response.rowCount) {
-               var {
-                  ae,
-                  container,
-                  latitude,
-                  longitude,
-                  altitude,
-                  creationtime,
-               } = response.rows[0];
-               var time = moment(creationtime).format("YYYYMMDDTHHmmss");
-               let parseresponse = {
-                  ae,
-                  container,
-                  location: { latitude, longitude, altitude },
-                  time,
-               };
+               return response.rows[0];
             } else {
                //if no response
-               console.log(response);
+               console.log("else, does not exist response.rowCount", response);
+               return response.rows;
             }
          })
          .catch((e) => {
-            console.log(e.stack);
+            throw e;
+         });
+   }
+
+   async selectDataS({ sql }) {
+      return pgClient
+         .query(sql)
+         .then((response) => {
+            console.log(sql);
+            if (response.rowCount) {
+               return response.rows;
+            } else {
+               //if no response
+               console.log("else, does not exist response.rowCount", response);
+               return response.rows;
+            }
+         })
+         .catch((e) => {
+            throw e;
          });
    }
 }

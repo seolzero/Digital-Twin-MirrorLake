@@ -25,7 +25,7 @@ class Control {
       if (!DO || !name) {
          throw new ErrorHandler(412, 5252, "please check mandatory field.");
       }
-      const createSQL = `create table ${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
+      const createSQL = `create table ${DO}_${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
 
       const model = new Model();
 
@@ -49,18 +49,16 @@ class Control {
                name: name,
             });
             if (filtered[0]) {
-               console.log("same control name exist: ", filtered[0]);
                throw new ErrorHandler(412, 5252, "control alredy exist.");
             } else {
                DOobj.control.push(controlNameObject);
                DOobj.controlCount++;
-               model.postgres.createTable({ sql: createSQL });
-               console.log("push: ", DOobj);
+               model.postgres.sendQuery({ sql: createSQL });
                await model.redis.set({ name: DO, obj: DOobj });
                return DOobj;
             }
          } else {
-            model.postgres.createTable({ sql: createSQL });
+            model.postgres.sendQuery({ sql: createSQL });
             DOobj.control = [controlNameObject];
             DOobj.controlCount = 1;
             await model.redis.set({ name: DO, obj: DOobj });
@@ -73,7 +71,7 @@ class Control {
                   value,
                });
             }
-            const result = await Promise.all(
+            await Promise.all(
                requestArr.map((index) => model.redis.hset(index))
             );
             return DOobj;
@@ -103,15 +101,16 @@ class Control {
             });
             if (filtered[0]) {
                //control이 null이 아니면
-               console.log(filtered[0]);
                filtered[0].controlDestination;
-               const insertSQL = `insert into ${control} values('${sensorID}', '${command}');`;
-               console.log(insertSQL);
-               await model.postgres.createTable({ sql: insertSQL });
+               const insertSQL = `insert into ${DO}_${control} values('${sensorID}', '${command}');`;
+               const result = await model.postgres.sendQuery({
+                  sql: insertSQL,
+               });
                await lib.request({
                   url: `${filtered[0].controlDestination}`,
                   bodyParams: { command },
                });
+               return filtered[0];
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");
             }
@@ -126,7 +125,7 @@ class Control {
     * @param {*} DO DOname
     * @param {*} control control name
     * @param {*} sensorID timestamp
-    * @param {*} command control command
+    * @param {*} response control command
     */
    async receiveControlDeliveryResponse({ DO, control, sensorID, response }) {
       const model = new Model();
@@ -141,10 +140,160 @@ class Control {
             });
             if (filtered[0]) {
                //control이 null이 아니면
-               console.log(filtered[0]);
-               const updateSQL = `update ${control} set deliveryresponse = '${response}' where timestamp='${sensorID}';`;
+               const updateSQL = `update ${DO}_${control} set deliveryresponse = '${response}' where timestamp='${sensorID}';`;
 
-               await model.postgres.createTable({ sql: updateSQL });
+               const result = await model.postgres.sendQuery({
+                  sql: updateSQL,
+               });
+               return filtered[0];
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
+   }
+
+   /**
+    * DO와 control이 존재하는지 조회하고 sensorID로 delivery response를 조회
+    * @param {*} DO DOname
+    * @param {*} control control name
+    * @param {*} sensorID timestamp
+    */
+   async get({ DO, control, sensorID }) {
+      const model = new Model();
+
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: control,
+            });
+            if (filtered[0]) {
+               //control이 null이 아니면
+               const selectSQL = `select * from ${DO}_${control} where timestamp='${sensorID}';`;
+               const result = await model.postgres.selectData({
+                  sql: selectSQL,
+               });
+               return result;
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
+   }
+
+   /**
+    * DO와 control이 존재하는지 조회하고 sensorID로 delivery response를 조회
+    * @param {*} DO DOname
+    * @param {*} control control name
+    * @param {*} sensorID timestamp
+    */
+   async getData({ DO, control }) {
+      const model = new Model();
+
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: control,
+            });
+            if (filtered[0]) {
+               //control이 null이 아니면
+               const selectSQL = `select * from ${DO}_${control} order by timestamp desc limit 5;`;
+               const result = await model.postgres.selectDataS({
+                  sql: selectSQL,
+               });
+               return result;
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
+   }
+
+   /**
+    * DO와 control이 존재하는지 조회하고 control 삭제
+    * @param {*} DO DOname
+    * @param {*} control control name
+    */
+   async delete({ DO, control }) {
+      const model = new Model();
+
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: control,
+            });
+
+            if (filtered[0]) {
+               //control이 null이 아니면
+               var controlIndex = DOobj.control.findIndex(
+                  (i) => i.name == control
+               );
+               DOobj.control.splice(controlIndex, 1);
+               DOobj.controlCount--;
+               await model.redis.set({ name: DO, obj: DOobj });
+               await model.redis.delete({ name: control });
+               const dropSQL = `drop table ${DO}_${control};`;
+               const result = await model.postgres.sendQuery({
+                  sql: dropSQL,
+               });
+
+               return DOobj;
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
+   }
+
+   /**
+    * command를 받으면 등록된 control을 조회하여 update
+    */
+   async update({
+      DO,
+      name,
+      controlCreator,
+      controlDestinationType,
+      controlDestination,
+   }) {
+      const model = new Model();
+      const controlNameObject = arguments[0];
+      delete controlNameObject.DO;
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: name,
+            });
+            if (filtered[0]) {
+               //control이 null이 아니면
+               var controlIndex = DOobj.control.findIndex(
+                  (i) => i.name == name
+               );
+
+               DOobj.control.splice(controlIndex, 1);
+               DOobj.control.push(controlNameObject);
+               await model.redis.set({ name: DO, obj: DOobj });
+
+               return DOobj;
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");
             }
@@ -156,9 +305,9 @@ class Control {
 }
 module.exports = Control;
 /*
-const createSQL = `create table ${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
-const insertSQL = `insert into ${name} values(${sensorID}, '${controlCommand}', '${deliveryResponse}');`;
-const updateSQL = `update ${name} set deliveryresponse = ${deliveryResponse} where timestamp=${sensorID};`;
-const dropSQL = `drop table tempctl;`;
-const selectSQL = `select * from ${name} where timestamp=${sensorID};`;
+const createSQL = `create table ${DO}_${control} (timestamp character varying, command character varying, deliveryResponse character varying);`;
+const insertSQL = `insert into ${DO}_${control} values(${sensorID}, '${controlCommand}', '${deliveryResponse}');`;
+const updateSQL = `update ${DO}_${control} set deliveryresponse = ${deliveryResponse} where timestamp=${sensorID};`;
+const dropSQL = `drop table ${DO}_${control};`;
+const selectSQL = `select * from ${DO}_${control} where timestamp=${sensorID};`;
 */

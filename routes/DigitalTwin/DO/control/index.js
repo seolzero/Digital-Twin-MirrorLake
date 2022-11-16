@@ -26,8 +26,8 @@ router.post("/", async function (req, res) {
          controlDestinationType,
          controlDestination,
       });
-      res.end();
-      //res.success(201, result);
+
+      res.success(201, result);
    } catch (e) {
       if (!(e instanceof ErrorHandler)) {
          console.log(e);
@@ -38,7 +38,7 @@ router.post("/", async function (req, res) {
 });
 
 /**
- * control data Creation
+ * control 에 대한 command를 받아서 control 생성 시 작성한 url로 전송
  * @params {String} DOname, controlName
  * @body {String} sensorID : timestamp
  * @body {String} command
@@ -55,8 +55,8 @@ router.post("/command", async function (req, res) {
          sensorID,
          command,
       });
-      res.end();
-      //res.success(201, result);
+
+      res.success(201, result);
    } catch (e) {
       if (!(e instanceof ErrorHandler)) {
          console.log(e);
@@ -67,7 +67,7 @@ router.post("/command", async function (req, res) {
 });
 
 /**
- * control data delivery response
+ * control command에 대한 결과값으로 delivery response를 받아 저장
  * @params {String} DOname, controlName
  * @body {String} sensorID : timestamp
  * @body {String} command
@@ -84,8 +84,8 @@ router.post("/response", async function (req, res) {
          sensorID,
          response,
       });
-      res.end();
-      //res.success(201, result);
+
+      res.success(201, result);
    } catch (e) {
       if (!(e instanceof ErrorHandler)) {
          console.log(e);
@@ -95,253 +95,94 @@ router.post("/response", async function (req, res) {
    }
 });
 
-/*
- * control data Creation
- * DigitalTwin/control/:DOname/data
+/* sensorID를 통해 저장된 control command와 deliveryresponse를 조회할 수 있음
+ * control Retrieve
+ * localhost:1005/DigitalTwin/DO/control?DO=<DOname>&control=<controlName>&sensorID=<ts>
  */
-router.post("/:DOName/data", function (req, res) {
-   var fullBody = "";
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
+router.get("/", async (req, res) => {
+   const { DO, control, sensorID } = req.query;
+   try {
+      const result = await services.control.get({ DO, control, sensorID });
 
-   req.on("end", function () {
-      let DOName = req.params.DOName;
-      var controlDataObject;
-      controlDataObject = JSON.parse(fullBody);
-
-      if (DONameList.includes(DOName)) {
-         console.log("body: ", controlDataObject, "DOName: ", DOName);
-         DOWholeDataList.forEach((element, index) => {
-            if (element.name == DOName) {
-               if (element.control) {
-                  var filtered = where(element.control, {
-                     name: controlDataObject.name,
-                  });
-                  if (filtered[0]) {
-                     res.status(200).send("Received control Data");
-                     // console.log("control is exist: ", filtered[0]);
-                     // console.log("element: ", util.inspect(element, false, null, true));
-                     if (filtered[0].data) {
-                        filtered[0].data.push(controlDataObject.data); //check please!!
-                        var fifoControlDataPushArray = new FifoArray(
-                           5,
-                           filtered[0].data
-                        );
-                        filtered[0].data = fifoControlDataPushArray;
-                        console.log(
-                           "create data arr & push data: ",
-                           util.inspect(element, false, null, true)
-                        );
-                        var controlDataElementToString =
-                           JSON.stringify(element);
-                        client.publish(
-                           "dp_do_data",
-                           controlDataElementToString
-                        ); //send string text!
-                        Rclient.set(key_DO, JSON.stringify(value));
-                     } else {
-                        filtered[0].data = [controlDataObject.data];
-                        console.log(
-                           "push data: ",
-                           util.inspect(element, false, null, true)
-                        );
-                        var controlDataElementToString =
-                           JSON.stringify(element);
-                        client.publish(
-                           "dp_do_data",
-                           controlDataElementToString
-                        ); //send string text!
-                        Rclient.set(key_DO, JSON.stringify(value));
-                     }
-                  } else {
-                     res.status(404).send("The control name does not exist");
-                  }
-               } else {
-                  // control create tag does not exist
-                  res.status(404).send("A DO with no control created");
-               }
-            }
-         });
-      } else {
-         res.status(404).send("DO does not exist");
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   });
+      e.handle(req, res, `Retrieve /DigitalTwin/DO/control`);
+   }
 });
 
-/*
- * control result update
+/* 저장된 control의 command를 최대 5개 조회할 수 있음
+ * control data Retrieve
+ * localhost:1005/DigitalTwin/DO/control/data?DO=<DOname>&control=<controlName>
  */
-router.put("/:DOName/:controlName", function (req, res) {
-   var fullBody = "";
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
+router.get("/data", async (req, res) => {
+   const { DO, control } = req.query;
+   try {
+      const result = await services.control.getData({ DO, control });
 
-   req.on("end", function () {
-      let DOName = req.params.DOName;
-      let controlName = req.params.controlName;
-      var controlUpdateDataObject;
-      controlUpdateDataObject = JSON.parse(fullBody);
-      if (DONameList.includes(DOName)) {
-         res.status(200).send("Received control Data");
-         DOWholeDataList.forEach((element, index) => {
-            if (element.name == DOName) {
-               if (element.control) {
-                  var filtered = where(element.control, { name: controlName });
-                  if (filtered[0]) {
-                     if (filtered[0].data) {
-                        filtered[0].data.forEach((data, index) => {
-                           const controlData = data.toString();
-                           let controlDataStringArr = controlData.split(", ");
-                           const updateControlData =
-                              controlUpdateDataObject.data.toString();
-                           let updateControlDataStringArr =
-                              updateControlData.split(", ");
-
-                           if (
-                              controlDataStringArr[0] ==
-                                 updateControlDataStringArr[0] &&
-                              controlDataStringArr[1] ==
-                                 updateControlDataStringArr[1]
-                           ) {
-                              if (controlUpdateDataObject.controlDone) {
-                                 let dataString =
-                                    controlUpdateDataObject.data +
-                                    ", " +
-                                    controlUpdateDataObject.controlReceived +
-                                    ", " +
-                                    controlUpdateDataObject.controlDone;
-                                 filtered[0].data.splice(index, 1, dataString);
-                                 let controlDataSetToString =
-                                    JSON.stringify(element);
-                                 client.publish(
-                                    "dp_do_data",
-                                    controlDataSetToString
-                                 );
-                                 Rclient.set(key_DO, JSON.stringify(value));
-                                 console.log(
-                                    "Update controlReceived, controlDone: ",
-                                    util.inspect(element, false, null, true)
-                                 );
-                              } else {
-                                 let dataString =
-                                    controlUpdateDataObject.data +
-                                    ", " +
-                                    controlUpdateDataObject.controlReceived;
-                                 filtered[0].data.splice(index, 1, dataString);
-                                 let controlDataSetToString =
-                                    JSON.stringify(element);
-                                 client.publish(
-                                    "dp_do_data",
-                                    controlDataSetToString
-                                 );
-                                 Rclient.set(key_DO, JSON.stringify(value));
-                                 console.log(
-                                    "Update controlReceived: ",
-                                    util.inspect(element, false, null, true)
-                                 );
-                              }
-                           }
-                        });
-                     }
-                  }
-               }
-            }
-         });
-      } else {
-         res.status(404).send("DO does not exist");
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   });
-});
-
-/*
- * control delete
- */
-router.delete("/:DOName/:controlName", (req, res) => {
-   let DOName = req.params.DOName;
-   let controlName = req.params.controlName;
-   console.log(DOName, controlName);
-   if (DONameList.includes(DOName)) {
-      DOWholeDataList.forEach((element, index) => {
-         if (element.name == DOName) {
-            if (element.control) {
-               var filtered = where(element.control, { name: controlName });
-               if (filtered[0]) {
-                  var controlIndex = element.control.findIndex(
-                     (i) => i.name == controlName
-                  );
-                  element.control.splice(controlIndex, 1);
-                  element.controlCount--;
-                  console.log(
-                     "element: ",
-                     util.inspect(element, false, null, true)
-                  );
-
-                  res.status(200).send(`control ${controlName} delete`);
-               } else {
-                  res.status(200).send("control does not exist");
-                  console.log(
-                     "element: ",
-                     util.inspect(element, false, null, true)
-                  );
-               }
-            } else {
-               res.status(404).send("control object does not exist");
-               console.log("control does not exist");
-               console.log(
-                  "element: ",
-                  util.inspect(element, false, null, true)
-               );
-            }
-         }
-      });
-   } else {
-      res.status(404).send("DO does not exist");
+      e.handle(req, res, `Retrieve /DigitalTwin/DO/control/data`);
    }
 });
 
 /*
- * control retrieve
+ * control Delete
+ * localhost:1005/DigitalTwin/DO/control?DO=<DOname>&control=<controlName>
  */
-router.get("/:DOName/:controlName", async function (req, res) {
-   let DOName = req.params.DOName;
-   let controlName = req.params.controlName;
-   console.log(DOName, controlName);
-   if (DONameList.includes(DOName)) {
-      DOWholeDataList.forEach((element, index) => {
-         if (element.name == DOName) {
-            if (element.control) {
-               var filtered = where(element.control, { name: controlName });
-               if (filtered[0]) {
-                  var controlIndex = element.control.findIndex(
-                     (i) => i.name == controlName
-                  );
-                  console.log(
-                     "element: ",
-                     util.inspect(element, false, null, true)
-                  );
+router.delete("/", async (req, res) => {
+   const { DO, control } = req.query;
+   try {
+      const result = await services.control.delete({ DO, control });
 
-                  res.status(200).send(`control ${controlName} ${element}`);
-               } else {
-                  res.status(200).send("control does not exist");
-                  console.log(
-                     "element: ",
-                     util.inspect(element, false, null, true)
-                  );
-               }
-            } else {
-               res.status(404).send("control object does not exist");
-               console.log("control does not exist");
-               console.log(
-                  "element: ",
-                  util.inspect(element, false, null, true)
-               );
-            }
-         }
+      res.success(200, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, `Delete /DigitalTwin/DO/control`);
+   }
+});
+
+/**
+ * control Update
+ * @params {String} DOname
+ * @body {String} name,controlCreator, controlDestinationType, controlDestination (required)
+ * @returns {Json} {}
+ * localhost:1005/DigitalTwin/DO/control?DO=DOname
+ */
+router.put("/", async function (req, res) {
+   try {
+      const { DO } = req.query;
+      const {
+         name,
+         controlCreator,
+         controlDestinationType,
+         controlDestination,
+      } = req.body;
+      const result = await services.control.update({
+         DO,
+         name,
+         controlCreator,
+         controlDestinationType,
+         controlDestination,
       });
-   } else {
-      res.status(404).send("DO does not exist");
+
+      res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, "PUT /DigitalTwin/DO/control");
    }
 });
 
