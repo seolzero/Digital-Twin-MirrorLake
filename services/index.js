@@ -1,6 +1,7 @@
 const DO = require("./modules/DO");
 const simulationGroup = require("./modules/simulationGroup");
 const serviceGroup = require("./modules/serviceGroup");
+const control = require("./modules/control");
 class Services {
    #getInstance(_class) {
       const className = _class.name;
@@ -23,6 +24,10 @@ class Services {
 
    get service() {
       return this.#getInstance(serviceGroup);
+   }
+
+   get control() {
+      return this.#getInstance(control);
    }
 }
 

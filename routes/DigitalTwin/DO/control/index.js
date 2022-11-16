@@ -1,7 +1,8 @@
 const express = require("express");
 const asyncify = require("express-asyncify");
 const router = asyncify(express.Router());
-
+const services = require("../../../../services");
+const ErrorHandler = require("../../../../lib/error-handler");
 /**
  * control Creation
  * @params {String} DOname
@@ -37,59 +38,61 @@ router.post("/", async function (req, res) {
 });
 
 /**
- * control Creation
- * DigitalTwin/control/:DOname
- * DO에 control을 만듦
- * @path {String} DOName
- * @body {String} name
- * @returns {String} msg
+ * control data Creation
+ * @params {String} DOname, controlName
+ * @body {String} sensorID : timestamp
+ * @body {String} command
+ * @returns {Json} {}
+ * localhost:1005/DigitalTwin/DO/control?DO=<DOname>&control=<controlName>
  */
-router.post("/:DOName", function (req, res) {
-   var fullBody = "";
-   req.on("data", function (chunk) {
-      fullBody += chunk;
-   });
-
-   req.on("end", function () {
-      let DOName = req.params.DOName;
-      var controlNameObject;
-      controlNameObject = JSON.parse(fullBody);
-
-      if (DONameList.includes(DOName)) {
-         console.log("body: ", controlNameObject, "DOName: ", DOName);
-         DOWholeDataList.forEach((element, index) => {
-            if (element.name == DOName) {
-               if (element.control) {
-                  var filtered = where(element.control, {
-                     name: controlNameObject.name,
-                  });
-                  if (filtered[0]) {
-                     res.status(400).send("control is already exist");
-                     console.log("same name exist: ", filtered[0]);
-                     console.log("element: ", element);
-                  } else {
-                     res.status(200).send(
-                        `Received control Data ${controlNameObject.name}`
-                     );
-                     element.control.push(controlNameObject);
-                     element.controlCount++;
-                     console.log("push: ", element);
-                  }
-               } else {
-                  res.status(200).send(controlNameObject.name);
-                  element.control = [controlNameObject];
-                  element.controlCount = 1;
-                  console.log(
-                     "control push: ",
-                     util.inspect(element, false, null, true)
-                  );
-               }
-            }
-         });
-      } else {
-         res.status(404).send("DO does not exist");
+router.post("/command", async function (req, res) {
+   try {
+      const { DO, control } = req.query;
+      const { sensorID, command } = req.body;
+      const result = await services.control.receiveControlCommand({
+         DO,
+         control,
+         sensorID,
+         command,
+      });
+      res.end();
+      //res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
       }
-   });
+      e.handle(req, res, "POST /DigitalTwin/DO/control");
+   }
+});
+
+/**
+ * control data delivery response
+ * @params {String} DOname, controlName
+ * @body {String} sensorID : timestamp
+ * @body {String} command
+ * @returns {Json} {}
+ * localhost:1005/DigitalTwin/DO/control?DO=<DOname>&control=<controlName>
+ */
+router.post("/response", async function (req, res) {
+   try {
+      const { DO, control } = req.query;
+      const { sensorID, response } = req.body;
+      const result = await services.control.receiveControlDeliveryResponse({
+         DO,
+         control,
+         sensorID,
+         response,
+      });
+      res.end();
+      //res.success(201, result);
+   } catch (e) {
+      if (!(e instanceof ErrorHandler)) {
+         console.log(e);
+         e = new ErrorHandler(500, 500, "Internal Server Error");
+      }
+      e.handle(req, res, "POST /DigitalTwin/DO/control");
+   }
 });
 
 /*

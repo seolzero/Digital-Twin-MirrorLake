@@ -31,7 +31,7 @@ class simulationGroup {
          requestArr.push({ key: `simulation_${name}`, field: key, value });
       }
       const result = await Promise.all(
-         requestArr.map((index) => model.reids.hset(index))
+         requestArr.map((index) => model.redis.hset(index))
       );
       return { success: result };
    }
@@ -63,7 +63,7 @@ class simulationGroup {
          requestArr.push({ key: `simulation_${name}`, field: key, value });
       }
       const result = await Promise.all(
-         requestArr.map((index) => model.reids.hset(index))
+         requestArr.map((index) => model.redis.hset(index))
       );
       return { success: result };
    }

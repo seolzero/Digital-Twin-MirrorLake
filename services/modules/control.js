@@ -1,4 +1,4 @@
-const where = require("lodash.where");
+const lib = require("../../lib");
 const Model = require("../../models");
 const ErrorHandler = require("../../lib/error-handler");
 class Control {
@@ -16,29 +16,36 @@ class Control {
     * @returns
     */
    async create({
-      DOname,
+      DO,
       name,
       controlCreator,
       controlDestinationType,
       controlDestination,
    }) {
-      if (!DOname || !name) {
+      if (!DO || !name) {
          throw new ErrorHandler(412, 5252, "please check mandatory field.");
       }
+      const createSQL = `create table ${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
 
       const model = new Model();
 
-      const isExistDOName = await model.redis.checkNameExist({
-         name: DOname,
+      const controlNameObject = {
+         name,
+         controlCreator,
+         controlDestinationType,
+         controlDestination,
+      };
+      const isExistDO = await model.redis.checkNameExist({
+         name: DO,
          key: "DO",
       });
-      if (isExistDOName) {
+      if (isExistDO) {
          //DO있으면
 
-         let DOobj = await model.redis.get({ name: DOname });
+         let DOobj = await model.redis.get({ name: DO });
          console.log("DOobj: ", DOobj);
          if (DOobj.control) {
-            var filtered = where(element.control, {
+            var filtered = where(DOobj.control, {
                name: name,
             });
             if (filtered[0]) {
@@ -47,38 +54,111 @@ class Control {
             } else {
                DOobj.control.push(controlNameObject);
                DOobj.controlCount++;
+               model.postgres.createTable({ sql: createSQL });
                console.log("push: ", DOobj);
+               await model.redis.set({ name: DO, obj: DOobj });
                return DOobj;
             }
          } else {
-            DOobj.control = [
-               {
-                  name,
-                  controlCreator,
-                  controlDestinationType,
-                  controlDestination,
-               },
-            ];
+            model.postgres.createTable({ sql: createSQL });
+            DOobj.control = [controlNameObject];
             DOobj.controlCount = 1;
+            await model.redis.set({ name: DO, obj: DOobj });
+            const requestArr = [];
+            for (let key in arguments[0]) {
+               let value = arguments[0][key];
+               requestArr.push({
+                  key: name,
+                  field: key,
+                  value,
+               });
+            }
+            const result = await Promise.all(
+               requestArr.map((index) => model.redis.hset(index))
+            );
             return DOobj;
          }
       } else {
-         throw new ErrorHandler(412, 5252, "Does not exist DOname.");
+         throw new ErrorHandler(412, 5252, "Does not exist DO.");
       }
+   }
 
-      // redis에 key:value 데이터 생성
-      const obj = {
-         name,
-         sensor,
-         sensorCount: sensor.length,
-         creationTime: new Date().getTime(),
-      };
-      await model.redis.set({ name, obj });
+   /**
+    * command를 받으면 등록된 control을 조회하여 controlDestination으로 controlCommand를 post
+    * @param {*} DO DOname
+    * @param {*} control control name
+    * @param {*} sensorID timestamp
+    * @param {*} command control command
+    */
+   async receiveControlCommand({ DO, control, sensorID, command }) {
+      const model = new Model();
 
-      //create table
-      await model.Postgres.create();
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: control,
+            });
+            if (filtered[0]) {
+               //control이 null이 아니면
+               console.log(filtered[0]);
+               filtered[0].controlDestination;
+               const insertSQL = `insert into ${control} values('${sensorID}', '${command}');`;
+               console.log(insertSQL);
+               await model.postgres.createTable({ sql: insertSQL });
+               await lib.request({
+                  url: `${filtered[0].controlDestination}`,
+                  bodyParams: { command },
+               });
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
+   }
 
-      return obj;
+   /**
+    * command를 받으면 등록된 control을 조회하여 controlDestination으로 controlCommand를 post
+    * @param {*} DO DOname
+    * @param {*} control control name
+    * @param {*} sensorID timestamp
+    * @param {*} command control command
+    */
+   async receiveControlDeliveryResponse({ DO, control, sensorID, response }) {
+      const model = new Model();
+
+      let DOobj = await model.redis.get({ name: DO });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         if (DOobj.control) {
+            var filtered = where(DOobj.control, {
+               name: control,
+            });
+            if (filtered[0]) {
+               //control이 null이 아니면
+               console.log(filtered[0]);
+               const updateSQL = `update ${control} set deliveryresponse = '${response}' where timestamp='${sensorID}';`;
+
+               await model.postgres.createTable({ sql: updateSQL });
+            } else {
+               throw new ErrorHandler(412, 5252, "control does not exist.");
+            }
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "DO does not exist.");
+      }
    }
 }
 module.exports = Control;
+/*
+const createSQL = `create table ${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
+const insertSQL = `insert into ${name} values(${sensorID}, '${controlCommand}', '${deliveryResponse}');`;
+const updateSQL = `update ${name} set deliveryresponse = ${deliveryResponse} where timestamp=${sensorID};`;
+const dropSQL = `drop table tempctl;`;
+const selectSQL = `select * from ${name} where timestamp=${sensorID};`;
+*/

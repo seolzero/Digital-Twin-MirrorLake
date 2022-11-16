@@ -11,10 +11,9 @@ class DO {
     * @returns {Json} {}
     */
    async create({ name, sensor }) {
-      if (!name || !sensor || sensor.length < 1) {
-         throw new ErrorHandler(412, 5252, "please check mandatory field.");
-      }
-
+      // if (!name || !sensor || sensor.length < 1) {
+      //    throw new ErrorHandler(412, 5252, "please check mandatory field.");
+      // }
       const model = new Model();
 
       const isExistName = await model.redis.checkNameExist({ name, key: "DO" });
@@ -25,19 +24,26 @@ class DO {
       // redis의 "DO" list에 새로 생길 DO의 이름 추가
       await model.redis.rpush({ key: "DO", name });
 
-      // redis에 key:value 데이터 생성
-      const obj = {
-         name,
-         sensor,
-         sensorCount: sensor.length,
-         creationTime: new Date().getTime(),
-      };
-      await model.redis.set({ name, obj });
-
-      // flink를 이용해 kafka에 DO 테이블 생성
-      await model.flink.createDOTable({ obj });
-
-      return obj;
+      if (sensor) {
+         // redis에 key:value 데이터 생성
+         const obj = {
+            name,
+            sensor,
+            sensorCount: sensor.length,
+            creationTime: new Date().getTime(),
+         };
+         await model.redis.set({ name, obj });
+         // flink를 이용해 kafka에 DO 테이블 생성
+         await model.flink.createDOTable({ obj });
+         return obj;
+      } else {
+         const obj = {
+            name,
+            creationTime: new Date().getTime(),
+         };
+         await model.redis.set({ name, obj });
+         return obj;
+      }
    }
 
    /**

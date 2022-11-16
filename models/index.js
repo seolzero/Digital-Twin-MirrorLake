@@ -26,7 +26,8 @@ class Models {
    get kafka() {
       return this.#getInstance(Kafka);
    }
-   get Postgres() {
+
+   get postgres() {
       return this.#getInstance(Postgres);
    }
 }
