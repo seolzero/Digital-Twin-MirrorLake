@@ -52,7 +52,7 @@ class serviceGroup {
          }
          requestArr.push({ key: `service_${name}`, field: key, value });
       }
-      await Promise.all(requestArr.map((index) => model.reids.hset(index)));
+      await Promise.all(requestArr.map((index) => model.redis.hset(index)));
 
       return { success: 1 };
    }
@@ -76,28 +76,6 @@ class serviceGroup {
          throw new ErrorHandler(412, 5252, "Unregistered service");
       }
 
-      // redis의 hmap set에 service 정보 추가
-      // await model.redis.hset({
-      //    key: `service_${name}`,
-      //    field: "name",
-      //    value: name,
-      // });
-      // await model.redis.hset({
-      //    key: `service_${name}`,
-      //    field: "DO_arg",
-      //    value: JSON.stringify(DO_arg),
-      // });
-      // await model.redis.hset({
-      //    key: `service_${name}`,
-      //    field: "SIM_arg",
-      //    value: JSON.stringify(SIM_arg),
-      // });
-      // await model.redis.hset({
-      //    key: `service_${name}`,
-      //    field: "url",
-      //    value: url,
-      // });
-
       const requestArr = [];
       for (let key in arguments[0]) {
          let value = arguments[0][key];
@@ -106,7 +84,7 @@ class serviceGroup {
          }
          requestArr.push({ key: `service_${name}`, field: key, value });
       }
-      await Promise.all(requestArr.map((index) => model.reids.hset(index)));
+      await Promise.all(requestArr.map((index) => model.redis.hset(index)));
 
       return { success: 1 };
    }
