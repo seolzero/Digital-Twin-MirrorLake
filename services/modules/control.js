@@ -108,7 +108,12 @@ class Control {
                });
                await lib.request({
                   url: `${filtered[0].controlDestination}`,
-                  bodyParams: { command },
+                  bodyParams: {
+                     DOname: DO,
+                     controlName: control,
+                     sensorID,
+                     command,
+                  },
                });
                return filtered[0];
             } else {
