@@ -72,7 +72,7 @@ router.post("/command", async function (req, res) {
  * @body {String} sensorID : timestamp
  * @body {String} command
  * @returns {Json} {}
- * localhost:1005/DigitalTwin/DO/control?DO=<DOname>&control=<controlName>
+ * localhost:1005/DigitalTwin/DO/control/response?DO=<DOname>&control=<controlName>
  */
 router.post("/response", async function (req, res) {
    try {
