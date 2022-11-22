@@ -62,15 +62,15 @@ class Flink {
       console.log(sensorList);
 
       if (sensorList.length == 1) {
-         createStreamSQL.statement = `CREATE TABLE ${DOName}(tmpA BIGINT, sensor1_id STRING, sensor1_value STRING, sensor1_rowtime TIMESTAMP(3), PRIMARY KEY (tmpA) NOT ENFORCED) WITH ('connector' = 'upsert-kafka', 'topic' = 'DO_${DOName}','properties.bootstrap.servers' = '${config.kafkaHost}', 'key.format' = 'json', 'value.format' = 'json')`;
+         createStreamSQL.statement = `CREATE TABLE ${DOName}(tmpA BIGINT, name STRING, data STRING, rowtime TIMESTAMP(3), PRIMARY KEY (tmpA) NOT ENFORCED) WITH ('connector' = 'upsert-kafka', 'topic' = 'DO_${DOName}','properties.bootstrap.servers' = '${config.kafka.host}', 'key.format' = 'json', 'value.format' = 'json')`;
       } else {
-         createStreamSQL.statement = `CREATE TABLE ${DOName} (tmpA BIGINT, sensor1_rowtime TIMESTAMP(3), `;
+         createStreamSQL.statement = `CREATE TABLE ${DOName} (tmpA BIGINT, name STRING, rowtime TIMESTAMP(3), `;
 
-         for (let i = 1; i <= sensorList.length; i++) {
-            createStreamSQL.statement += `sensor${i}_id STRING, sensor${i}_value STRING, `;
+         for (i = 0; i < sensorList.length; i++) {
+            createStreamSQL.statement += `${sensorList[i]} STRING, `;
          }
 
-         createStreamSQL.statement += `PRIMARY KEY (tmpA) NOT ENFORCED) WITH('connector' = 'upsert-kafka', 'topic' = 'DO_${DOName}','properties.bootstrap.servers' = '${config.kafkaHost}', 'key.format' = 'json', 'value.format' = 'json')`;
+         createStreamSQL.statement += `PRIMARY KEY (tmpA) NOT ENFORCED) WITH('connector' = 'upsert-kafka', 'topic' = 'DO_${DOName}','properties.bootstrap.servers' = '${config.kafka.host}', 'key.format' = 'json', 'value.format' = 'json')`;
       }
 
       console.log("createStreamSQL: ", createStreamSQL);
@@ -84,8 +84,8 @@ class Flink {
       } else {
          insertTableSQL.statement += `${sensorList[0]}.tmp, ${sensorList[0]}.sensor_rowtime, `;
 
-         for (let i = 0; i < sensorList.length; i++) {
-            insertTableSQL.statement += `${sensorList[i]}.sensor_id, ${sensorList[i]}.sensor_value `;
+         for (i = 0; i < sensorList.length; i++) {
+            insertTableSQL.statement += `${sensorList[i]}.sensor_value `;
             if (i != sensorList.length - 1) {
                insertTableSQL.statement += `, `;
             } else if (i == sensorList.length - 1) {
@@ -105,10 +105,10 @@ class Flink {
       console.log("insertTableSQL: ", insertTableSQL);
 
       const createTable = await this.#request({ bodyParams: createStreamSQL });
-      console.log(createTable.results);
+      console.log(createTable);
 
       const insertData = await this.#request({ bodyParams: insertTableSQL });
-      console.log(insertData.results);
+      console.log(insertData);
       return 0;
    }
 
