@@ -151,6 +151,11 @@ class Redis {
       });
       return keys;
    }
+
+   async publish({ channel, message }) {
+      const result = await Rclient.publish(channel, JSON.stringify(message));
+      return result;
+   }
 }
 
 module.exports = Redis;

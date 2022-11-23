@@ -103,12 +103,19 @@ class Control {
                //control이 null이 아니면
                filtered[0].controlDestination;
                const insertSQL = `insert into ${DO}_${control} values('${sensorID}', '${command}');`;
-               const result = await model.postgres.sendQuery({
-                  sql: insertSQL,
-               });
+               await model.postgres.sendQuery({ sql: insertSQL });
                await lib.request({
                   url: `${filtered[0].controlDestination}`,
                   bodyParams: {
+                     DOname: DO,
+                     controlName: control,
+                     sensorID,
+                     command,
+                  },
+               });
+               await model.redis.publish({
+                  channel: "control",
+                  message: {
                      DOname: DO,
                      controlName: control,
                      sensorID,
