@@ -133,7 +133,7 @@ class Control {
    }
 
    /**
-    * command를 받으면 등록된 control을 조회하여 controlDestination으로 controlCommand를 post
+    * 제어가 완료된 후의 결과를 응답으로 받음
     * @param {*} DO DOname
     * @param {*} control control name
     * @param {*} sensorID timestamp
@@ -141,7 +141,6 @@ class Control {
     */
    async receiveControlDeliveryResponse({ DO, control, sensorID, response }) {
       const model = new Model();
-
       let DOobj = await model.redis.get({ name: DO });
       console.log("DOobj: ", DOobj);
       if (DOobj) {
@@ -157,10 +156,23 @@ class Control {
                const result = await model.postgres.sendQuery({
                   sql: updateSQL,
                });
+
+               //unity server로 result 전송
+               await lib.request({
+                  url: `${filtered[0].controlDestination}`, //unity server ip address
+                  bodyParams: {
+                     DOname: DO,
+                     controlName: control,
+                     sensorID,
+                     response,
+                  },
+               });
                return filtered[0];
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");
             }
+         } else {
+            throw new ErrorHandler(412, 5252, "control does not exist.");
          }
       } else {
          throw new ErrorHandler(412, 5252, "DO does not exist.");
