@@ -162,6 +162,16 @@ class DO {
       DOWholeData.creationTime = new Date().getTime();
       return DOWholeData;
    }
+
+   async saveDO2DigitalBase({ DO_arg, SIM_arg }) {
+      const model = new Model();
+
+      const result = await model.kafka.postgresJBDCconnector({
+         DO_arg,
+         SIM_arg,
+      });
+      return result;
+   }
 }
 
 module.exports = DO;

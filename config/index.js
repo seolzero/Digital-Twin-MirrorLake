@@ -35,7 +35,7 @@ exports.flink = {
 
 exports.postgres = {
    config: {
-      host: "localhost",
+      host: "192.168.140.123",
       port: 5432,
       user: "postgres",
       password: "keti123",

@@ -1,4 +1,5 @@
 const config = require("../../config");
+const lib = require("../../lib");
 const { connectHost } = config.kafka;
 const [hostname, port] = connectHost.split(":");
 
@@ -331,6 +332,69 @@ class Kafka {
 
       //console.log("sinkConnectorBody\n", sinkConnectorBody);
       return sinkConnectorBody;
+   }
+
+   async postgresJBDCconnector({ DO_arg }) {
+      //console.log(DO_arg);
+      //const DOs = Object.keys(JSON.parse(DO_arg)); //[ 'DO1', 'DO2' ]
+      const DOs = DO_arg;
+      console.log(DOs);
+      let topics = "";
+      if (DOs.length > 0) {
+         let DO_s = DOs.map((s) => "DO_" + s);
+         for (let i in DO_s) {
+            topics += DO_s[i];
+            if (i != DO_s.length - 1) {
+               topics += ",";
+            }
+         }
+      }
+
+      let JDBCsinkConnectorBody = {
+         name: topics,
+         config: {
+            "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+            "tasks.max": "1",
+            topics: topics,
+            "input.data.format": "JSON",
+            "connection.url": `jdbc:postgresql://${config.postgres.config.host}:5432/${config.postgres.config.database}`,
+            "connection.host": `${config.postgres.config.host}`,
+            "connection.port": "5432",
+            "connection.user": `${config.postgres.config.user}`,
+            "connection.password": `${config.postgres.config.password}`,
+            "db.name": `${config.postgres.config.database}`,
+            "auto.create": "true",
+            "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+            "key.converter.schemas.enable": "false",
+            "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+            "value.converter.schemas.enable": "false",
+         },
+      };
+      /**
+       * Send Request to Kafka Connect Server
+       */
+      var request = http.request(
+         this.setOptions({ method: "post", path: "/connectors" }),
+         function (response) {
+            var chunks = [];
+
+            response.on("data", function (chunk) {
+               chunks.push(chunk);
+            });
+
+            response.on("end", function (chunk) {
+               var body = Buffer.concat(chunks);
+               console.log(body.toString());
+            });
+
+            response.on("error", function (error) {
+               console.error(error);
+            });
+         }
+      );
+      request.write(JSON.stringify(JDBCsinkConnectorBody));
+      request.end();
+      return JDBCsinkConnectorBody;
    }
 }
 
