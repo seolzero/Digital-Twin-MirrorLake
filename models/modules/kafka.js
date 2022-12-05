@@ -334,21 +334,8 @@ class Kafka {
       return sinkConnectorBody;
    }
 
-   async postgresJBDCconnector({ DO_arg }) {
-      //console.log(DO_arg);
-      //const DOs = Object.keys(JSON.parse(DO_arg)); //[ 'DO1', 'DO2' ]
-      const DOs = DO_arg;
-      console.log(DOs);
-      let topics = "";
-      if (DOs.length > 0) {
-         let DO_s = DOs.map((s) => "DO_" + s);
-         for (let i in DO_s) {
-            topics += DO_s[i];
-            if (i != DO_s.length - 1) {
-               topics += ",";
-            }
-         }
-      }
+   async postgresJBDCconnector({ name }) {
+      let topics = `DO_${name}`;
 
       let JDBCsinkConnectorBody = {
          name: topics,

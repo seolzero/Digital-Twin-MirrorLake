@@ -104,6 +104,7 @@ class Control {
                filtered[0].controlDestination;
                const insertSQL = `insert into ${DO}_${control} values('${sensorID}', '${command}');`;
                await model.postgres.sendQuery({ sql: insertSQL });
+
                await lib.request({
                   url: `${filtered[0].controlDestination}`,
                   bodyParams: {
@@ -113,6 +114,7 @@ class Control {
                      command,
                   },
                });
+               /* url 전송 받지 못하는 경우를 대비한 redis pub
                await model.redis.publish({
                   channel: "control",
                   message: {
@@ -122,6 +124,7 @@ class Control {
                      command,
                   },
                });
+               */
                return filtered[0];
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");
@@ -137,7 +140,7 @@ class Control {
     * @param {*} DO DOname
     * @param {*} control control name
     * @param {*} sensorID timestamp
-    * @param {*} response control command
+    * @param {*} response control result command
     */
    async receiveControlDeliveryResponse({ DO, control, sensorID, response }) {
       const model = new Model();
@@ -156,17 +159,18 @@ class Control {
                const result = await model.postgres.sendQuery({
                   sql: updateSQL,
                });
-
-               //unity server로 result 전송
-               await lib.request({
-                  url: `${filtered[0].controlDestination}`, //unity server ip address
-                  bodyParams: {
+               /*
+               //result pub -> unity 에서 subscribe
+               await model.redis.publish({
+                  channel: "response",
+                  message: {
                      DOname: DO,
                      controlName: control,
                      sensorID,
                      response,
                   },
                });
+               */
                return filtered[0];
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");
