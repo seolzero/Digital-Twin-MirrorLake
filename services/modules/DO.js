@@ -163,13 +163,10 @@ class DO {
       return DOWholeData;
    }
 
-   async saveDO2DigitalBase({ DO_arg, SIM_arg }) {
+   async saveDO2DigitalBase({ name }) {
       const model = new Model();
 
-      const result = await model.kafka.postgresJBDCconnector({
-         DO_arg,
-         SIM_arg,
-      });
+      const result = await model.kafka.postgresJBDCconnector({ name });
       return result;
    }
 }

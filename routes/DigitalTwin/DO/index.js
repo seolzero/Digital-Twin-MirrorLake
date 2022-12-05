@@ -16,6 +16,8 @@ router.post("/", async function (req, res) {
       const { name, sensor } = req.body;
 
       const result = await services.do.create({ name, sensor });
+      //DO save -> DigitalBase(postgreSQL)
+      await services.do.saveDO2DigitalBase({ name });
 
       res.success(201, result);
    } catch (e) {
@@ -121,27 +123,6 @@ router.put("/", async (req, res) => {
          e = new ErrorHandler(500, 500, "Internal Server Error");
       }
       e.handle(req, res, "UPDATE /DigitalTwin/DO");
-   }
-});
-
-/**
- * DO save -> DigitalBase(postgreSQL)
- * @body {"DO_arg":[...]}
- * @returns
- */
-router.post("/save", async function (req, res) {
-   try {
-      const { DO_arg } = req.body;
-
-      const result = await services.do.saveDO2DigitalBase({ DO_arg });
-
-      res.success(201, result);
-   } catch (e) {
-      if (!(e instanceof ErrorHandler)) {
-         console.log(e);
-         e = new ErrorHandler(500, 500, "Internal Server Error");
-      }
-      e.handle(req, res, "POST /DigitalTwin/DO");
    }
 });
 
