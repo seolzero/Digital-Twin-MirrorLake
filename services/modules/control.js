@@ -25,7 +25,7 @@ class Control {
       if (!DO || !name) {
          throw new ErrorHandler(412, 5252, "please check mandatory field.");
       }
-      const createSQL = `create table ${DO}_${name} (timestamp character varying, command character varying, deliveryResponse character varying);`;
+      const createSQL = `create table ${DO}_${name} (timestamp character varying, command character varying, deliveryResponse character varying, qos character varying);`;
 
       const model = new Model();
 
@@ -101,7 +101,6 @@ class Control {
             });
             if (filtered[0]) {
                //control이 null이 아니면
-               filtered[0].controlDestination;
                const insertSQL = `insert into ${DO}_${control} values('${sensorID}', '${command}');`;
                await model.postgres.sendQuery({ sql: insertSQL });
 
@@ -142,7 +141,13 @@ class Control {
     * @param {*} sensorID timestamp
     * @param {*} response control result command
     */
-   async receiveControlDeliveryResponse({ DO, control, sensorID, response }) {
+   async receiveControlDeliveryResponse({
+      DO,
+      control,
+      sensorID,
+      response,
+      qos,
+   }) {
       const model = new Model();
       let DOobj = await model.redis.get({ name: DO });
       console.log("DOobj: ", DOobj);
@@ -154,23 +159,11 @@ class Control {
             });
             if (filtered[0]) {
                //control이 null이 아니면
-               const updateSQL = `update ${DO}_${control} set deliveryresponse = '${response}' where timestamp='${sensorID}';`;
+               const updateSQL = `update ${DO}_${control} set deliveryresponse = '${response}' , qos = '${qos}' where timestamp='${sensorID}';`;
 
                const result = await model.postgres.sendQuery({
                   sql: updateSQL,
                });
-               /*
-               //result pub -> unity 에서 subscribe
-               await model.redis.publish({
-                  channel: "response",
-                  message: {
-                     DOname: DO,
-                     controlName: control,
-                     sensorID,
-                     response,
-                  },
-               });
-               */
                return filtered[0];
             } else {
                throw new ErrorHandler(412, 5252, "control does not exist.");

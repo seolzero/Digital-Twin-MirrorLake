@@ -77,12 +77,13 @@ router.post("/command", async function (req, res) {
 router.post("/response", async function (req, res) {
    try {
       const { DO, control } = req.query;
-      const { sensorID, response } = req.body;
+      const { sensorID, response, qos } = req.body;
       const result = await services.control.receiveControlDeliveryResponse({
          DO,
          control,
          sensorID,
          response,
+         qos,
       });
 
       res.success(201, result);
