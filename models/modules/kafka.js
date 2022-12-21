@@ -118,7 +118,10 @@ class Kafka {
 
    async SimulationHttpSinkConnector(resObject) {
       const DOs = Object.keys(resObject.arg);
-      console.log("DOs: ", DOs);
+      //console.log("DOs: ", DOs);
+      const DOdim = DOs[0];
+      console.log("batchCount: ", resObject.arg[DOdim].dim[0]);
+      const batchCount = resObject.arg[DOdim].dim[0];
       let DO_DOs = DOs.map((d) => "DO_" + d);
       console.log("DO_DOs: ", DO_DOs);
       let topics = "";
@@ -144,7 +147,7 @@ class Kafka {
             topics: topics,
             "response.topic": `SIM_${resObject.name}`,
             "kafka.api.url": `${config.kafka.host}`,
-            "batch.max.size": 512,
+            "batch.max.size": batchCount,
          },
       };
 
