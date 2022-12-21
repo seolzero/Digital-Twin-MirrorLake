@@ -3,6 +3,45 @@ const Model = require("../../models");
 const ErrorHandler = require("../../lib/error-handler");
 class Control {
    /**
+    * DO 생성 시 contol생성
+    * 배열로 control 인자를 받음
+    * redis에 control 저장: hset으로 controlName, {key:value}
+    * @param {string} DOname
+    * @param {arr} control
+    *   "control": [
+                     {
+                        "name": "crane_control",
+                        "controlCreator" : "ssul",
+                        "controlDestinationType" : "http",
+                        "controlDestination" : "http://203.254.171.126:1234/control", 
+
+                     },
+                  ]
+    * @returns
+    */
+   async createControlWithDO(DO, control) {
+      const model = new Model();
+
+      control.some(async (index) => {
+         const createSQL = `create table ${DO}_${index.name} (timestamp character varying, command character varying, deliveryResponse character varying, qos character varying);`;
+
+         await model.postgres.sendQuery({ sql: createSQL });
+
+         const requestArr = [];
+         for (let key in arguments[0]) {
+            let value = arguments[0][key];
+            requestArr.push({
+               key: index.name,
+               field: key,
+               value,
+            });
+         }
+         await Promise.all(requestArr.map((index) => model.redis.hset(index)));
+      });
+
+      return 0;
+   }
+   /**
     * DO내부에 contol생성
     * DO가 존재하는지 확인
     * DO 에 control 이 있는지 확인
@@ -58,7 +97,7 @@ class Control {
                return DOobj;
             }
          } else {
-            model.postgres.sendQuery({ sql: createSQL });
+            await model.postgres.sendQuery({ sql: createSQL });
             DOobj.control = [controlNameObject];
             DOobj.controlCount = 1;
             await model.redis.set({ name: DO, obj: DOobj });

@@ -13,12 +13,14 @@ const ErrorHandler = require("../../../lib/error-handler");
  */
 router.post("/", async function (req, res) {
    try {
-      const { name, sensor } = req.body;
+      const { name, sensor, control } = req.body;
 
-      const result = await services.do.create({ name, sensor });
+      const result = await services.do.create({ name, sensor, control });
       //DO save -> DigitalBase(postgreSQL)
       await services.do.saveDO2DigitalBase({ name });
-
+      if (control) {
+         await services.control.createControlWithDO(name, control);
+      }
       res.success(201, result);
    } catch (e) {
       if (!(e instanceof ErrorHandler)) {
