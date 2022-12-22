@@ -36,6 +36,8 @@ class DO {
          await model.redis.set({ name, obj });
          // flink를 이용해 kafka에 DO 테이블 생성
          await model.flink.createDOTable({ obj });
+         // redis의 "DO" list에 새로 생길 DO의 이름 추가
+         await model.redis.rpush({ key: "DO", name });
          return obj;
       } else {
          //control이 있으면 포함해서 등록
@@ -50,6 +52,8 @@ class DO {
          await model.redis.set({ name, obj });
          // flink를 이용해 kafka에 DO 테이블 생성
          await model.flink.createDOTable({ obj });
+         // redis의 "DO" list에 새로 생길 DO의 이름 추가
+         await model.redis.rpush({ key: "DO", name });
          return obj;
       }
    }
@@ -123,7 +127,7 @@ class DO {
     * 저장된 DO 삭제
     * @param {string} name
     * @returns {Json}
-    */
+   
    async delete({ name }) {
       const model = new Model();
 
@@ -136,6 +140,40 @@ class DO {
       } else {
          return "Unregistered DO";
       }
+   }
+    */
+
+   /**
+    * 저장된 DO & control 삭제
+    * @param {string} name
+    * @returns {Json}
+    */
+   async delete({ name }) {
+      const model = new Model();
+
+      let DOobj = await model.redis.get({ name: name });
+      console.log("DOobj: ", DOobj);
+      if (DOobj) {
+         //DO가 null이 아니면
+         await model.redis.delete({ name });
+         await model.redis.removeFromList({ name, key: "DO" });
+         await model.flink.dropTable({ name });
+
+         if (DOobj.control) {
+            DOobj.control.forEach(async (index) => {
+               console.log(index);
+               await model.redis.delete({ name: index.name });
+               const dropSQL = `drop table ${name}_${index.name};`;
+               await model.postgres.sendQuery({
+                  sql: dropSQL,
+               });
+            });
+         }
+      } else {
+         throw new ErrorHandler(412, 5252, "Unregistered DO");
+      }
+
+      return { delete: name };
    }
 
    /**
@@ -150,6 +188,16 @@ class DO {
       keys.forEach(async (key) => {
          Rclient.DEL(key);
          await model.flink.dropTable({ name: key });
+         if (key.control) {
+            key.control.forEach(async (index) => {
+               console.log(index);
+               await model.redis.delete({ name: index.name });
+               const dropSQL = `drop table ${key}_${index.name};`;
+               await model.postgres.sendQuery({
+                  sql: dropSQL,
+               });
+            });
+         }
       });
 
       return { delete: keys.length };

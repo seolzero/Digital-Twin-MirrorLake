@@ -22,7 +22,7 @@ class Control {
    async createControlWithDO(DO, control) {
       const model = new Model();
 
-      control.some(async (index) => {
+      control.forEach(async (index) => {
          const createSQL = `create table ${DO}_${index.name} (timestamp character varying, command character varying, deliveryResponse character varying, qos character varying);`;
 
          await model.postgres.sendQuery({ sql: createSQL });

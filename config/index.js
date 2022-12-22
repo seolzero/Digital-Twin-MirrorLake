@@ -1,6 +1,6 @@
 exports.digitalBrain = {
    ip: "localhost",
-   port: "1005",
+   port: "1203",
 };
 
 exports.redis = {
