@@ -16,13 +16,28 @@ class DO {
       }
       const model = new Model();
 
-      const isExistName = await model.redis.checkNameExist({ name, key: "DO" });
+      const isExistName = await model.redis.checkNameExist({
+         name,
+         key: "DO",
+      });
       if (isExistName) {
          throw new ErrorHandler(412, 5252, "already exist name.");
       }
 
-      // redis의 "DO" list에 새로 생길 DO의 이름 추가
-      await model.redis.rpush({ key: "DO", name });
+      for (const i of sensor) {
+         var isSensorExistName = await model.redis.checkNameExist({
+            name: sensor,
+            key: "sensor",
+         });
+
+         if (!isSensorExistName) {
+            throw new ErrorHandler(
+               412,
+               5252,
+               `${sensor} is an unregistered sensor`
+            );
+         }
+      }
 
       if (!control) {
          //control이 없으면 센서정보만 등록
